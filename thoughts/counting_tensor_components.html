@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Writing</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
+	<link rel="manifest" href="../site.webmanifest">
+    </head>
+    <body>
+	<h3>Counting Tensor Components</h3>
+
+	<p>
+	Counting the number of independent components in tensors with symmetry constrains
+	is easy to conceptualize, but it took me days to learn a systematic algorithm for
+	solving the problem. Here I present one method for enumerating the components of
+	tensors with arbitrary rank, in arbitrarily high dimensional spaces, with arbitrary
+	number of symmetry and antisymmetry constraints.
+	</p>
+
+	<hr>
+
+	<h3>Schur-Weyl Duality</h3>
+
+	<p>
+	The Schur-Weyl duality is a connection between the general linear group and the
+	symmetry group on the same tensor space. The duality connects the <i>irreducible
+	representations</i> of these two groups in the sense that it says that the symmetries
+	determine eachother on a similar tensor space. Let's unpack.
+	</p>
+
+	<p>
+	First, lets understand the general linear group. This is the group of all invertable
+	transforms on a given tensor space. The general linear GL group is often specified in
+	a certain degree <i>n</i>, which corresponds to the dimension of the underlying tensor
+	space. So the general linear group GL(<i>n</i>) is filled with invertible tensors
+	of size <i>n</i> by <i>n</i>. Invertible matrices clearly form a group under tensor
+	multiplication: the product of two invertible matrices is again invertible, the inverse
+	of an invertible matrix is itself invertible, and the identity element is the identity
+	matrix.
+	</p>
+
+	<p>
+	Second, the symmetry group on a finite tensor space consists of all permutations over
+	the indices of a tensor. Again, this operation forms a group.
+	</p>
+
+	<p>
+	Schur-Weyl duality says that the general linear group and the symmetry group commute
+	with eachother on their respective tensor space. This can be seen if one considers how
+	each group acts on the tensor space. The general linear group acts within each rank of
+	the tensor space. The symmetry group acts between ranks of the tensor space. Both groups
+	act on the same tensor space, but they never step on eachother's toes. So the order in
+	which they are performed does not matter &mdash; thats what commutivity means.
+	</p>
+
+	<p>
+	However, Schur-Weyl duality establishes more than commutivity. The duality shows that
+	the two groups <i>determine</i> eachother. They determine eachother in the sense that
+	knowing the general linear groups determines the symmetry groups, and visa versa. This
+	can be shown with the double centralizer theorem, but I think it can be explained more
+	simply.
+	</p>
+
+	<p>
+	First grant that a linear transform (an element of the group GL(<i>n</i>)) and a tensor-rank permutation
+	operator commute for all potential coefficients of the linear transform. Actually, let's say
+	any potential coefficients of the linear transform such that the transform remains invertible.
+	If these two operations commute, then the linear transform must act identically on all ranks of
+	the tensor space. Otherwise, we could permute the tensor such that the linear transform would not
+	commute. So permutations between ranks restricts linear transforms to and within ranks. The duality
+	estabishes that this relationship works both ways: linear transforms determine the symmetries available,
+	and symmetries determine the linear transforms.
+	</p>
+    
+	<p>
+	This last point, that known symmetries on a tensor space determine the group of linear transforms, is critical
+	to our application of the Schur-Weyl duality. We would like to use this result to count the number of
+	independent components of a tensor with arbitrary symmetries. By encoding our symmetries as <i>irreducible
+	representations</i>, we can determine which linear transforms are necessary. The sum of the dimensions of
+	these linear transforms will be the dimension of the tensor space.
+	</p>
+
+	<hr>
+
+	<p>
+	Several questions remain unanswered. What is an irreducible representation? Why should the sum of dimensions of
+	the linear transforms total to the number of independent components of the entire space?
+	</p>
+    </body>
+</html>
