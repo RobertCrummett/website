@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Writing</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
+	<link rel="manifest" href="../site.webmanifest">
+    </head>
+    <body>
+	<h3>The Singular Value Decomposition</h3>
+
+	<p>I am reviewing the properties and subtleties of this decomposition. So why
+	no write about them while I do!</p>
+
+	<p>The singular value decomposition (SVD) always exist for any matrix
+	of size <i>N</i> by <i>M</i> (the matrix can be any size in general).
+	The SVD breaks a matrix into the matrix product of three other
+	matrices: the matrix of left singular vectors, the singular vector
+	matrix, and the right singular vectors. Each have a clear geometric
+	interpretation, which I shall elaborate.</p>
+
+	<hr>
+
+	<h3>Basics</h3>
+
+	<p>The left singular vectors <i>U</i> is of size <i>N</i> by <i>N</i>. The matrix is unitary,
+	meaning that its transpose is its inverse: <i>UU<sup>T</sup>=U<sup>T</sup>U=I</i>. The matrix
+	can be complex in general. It is unique, up to a column-wise phase shift. When real, the matrix
+	columns are unique up to the sign.</p>
+
+	<p>The singular values <i>S</i> is of size <i>N</i> by <i>M</i>. The matrix is zero everywhere,
+	except along the main diagonal, which is composed of non-negative, real <i>singular values</i>.
+	The values along the diagonals are usually sorted in descending order. This choice renders the
+	singular value matrix unique.</p>
+	 
+	<p>The right singular vectors <i>V</i> is of size <i>M</i> by <i>M</i>. The matrix is unitary,
+	meaning that its transpose is its inverse: <i>VV<sup>T</sup>=V<sup>T</sup>V=I</i>. The matrix
+	can be complex in general. It is unique, up to a column-wise phase shift. When real, the matrix
+	columns are unique up to the sign.</p>
+
+	<p><i>The SVD of an N by M matrix G will be denotes mathematically as G=USV<sup>T</sup></i></p>
+
+	<hr>
+
+	<h3>Properties</h3>
+
+	<p>The general solution to any linear system can be decomposed into two portions: the solution
+	to the original linear system and any solutions to the homogeneous linear system. These two
+	portions will be referred to as the <i>particular</i> part and the <i>null</i> part respectively.
+	It turns out that the SVD cleanly divides the operator of any linear system into parts that act
+	on the particular and null vectors spaces associated with the arguments of the linear system.</p>
+
+	<p>Singular values can be zero. The situation is that the singular value will annihilate the
+	associated right singular vector (a column vector of the right singular vectors). In other words,
+	the associated right singular vector lives in the null space of the operator. The number of zero
+	singular vectors is indicative of the dimension of the null space of the operator. The number of
+	non-zero singular values indicate the rank of the operator; this is just the rank-nullity theorem
+	dressed up in SVD clothing.</p>
+
+	<p>What we can deduce from the previous paragraph is that under-determined linear systems will
+	always have zero singular values! In practice, usually the singular values will appear to be
+	nearly zero &mdash; nearly zero is close enough. The interpretation of small singular values
+	is that these directions are damped, or suppressed, by the operator.</p>
+
+	<p>We could say that in the forward problem that the operator has poor sensitivity to the small
+	singular value directions. Two inputs that are close but different will produce nearly identical
+	results after being scaled by a small number. So this should raise alarm bells for people interested
+	in inverting these linear systems. These insensitive directions will be <i>very</i> sensitive to small
+	changes when the SVD is inverted. Practically this manifests as instability.</p>
+
+	<p>The condition number of an operator is the ratio of the largest singular value over the smallest
+	singular value. Large condition numbers are an indication that the linear system is ill-conditioned.
+	In practice, this might look like conditions numbers greater than 10000. Although that number is kind
+	of off-the-cuff.</p>
+    </body>
+</html> 
