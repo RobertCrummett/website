@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Writing</title>
+	<title>RNC &mdash; Writing</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
@@ -26,11 +26,11 @@
 	<p> The Schur-Weyl duality is a connection between the general linear
 	group and the symmetry group on the same tensor space. The duality
 	connects the <i>irreducible representations</i> of these two groups in
-	the sense that it says that the symmetries determine eachother on a
+	the sense that it says that the symmetries determine each other on a
 	similar tensor space. Let's unpack. </p>
 
 	<p> First, lets understand the general linear group. This is the group
-	of all invertable transforms on a given tensor space. The general
+	of all invertible transforms on a given tensor space. The general
 	linear GL group is often specified in a certain degree <i>n</i>, which
 	corresponds to the dimension of the underlying tensor space. So the
 	general linear group GL(<i>n</i>) is filled with invertible tensors of
@@ -58,31 +58,33 @@
 	space where the representation can be block-diagonalized, then the
 	representation is said to be reducible. Irreducible representations are
 	a space that cannot be further decomposed into block diagonal form. To
-	put this another way, they have no proper (trivial) invariant subspaces. The irreducible
-	representations are the atomic building blocks of our group actions. </p>
+	put this another way, they have no proper (trivial) invariant
+	subspaces. The irreducible representations are the atomic building
+	blocks of our group actions. </p>
 
 	<p> An irreducible representation will always exist for the general
 	linear group and the symmetric group. The irreducible representation is
 	not necessarily unique; however, the multiplicities (or size) of the
-	irreducible representation is unique. This is a result due to
-	<a href="https://en.wikipedia.org/wiki/Maschke%27s_theorem">Maschke</a>. </p>
+	irreducible representation is unique. This is a result due to <a
+	    href="https://en.wikipedia.org/wiki/Maschke%27s_theorem">Maschke</a>.
+	</p>
 
 	<p> Schur-Weyl duality says that the irreducible representation of the
-	general linear group and the symmetry group commute with eachother on
+	general linear group and the symmetry group commute with each other on
 	their respective tensor space. This can be seen if one considers how
 	each group acts on the tensor space. The general linear group acts
 	locally within each slot of the tensor space. The symmetry group acts
 	globally, swapping the slots themselves. Both groups act on the same
-	tensor space, but they never step on eachother's toes. So the order in
-	which they are performed does not matter &mdash; thats what commutivity
-	means. And because the irreducible representations are commutivite,
-	they can be block-diagonalized simultaneously. Because these
-	irreducible representations share blocks, we will find that they can be
-	naturally described by Young diagrams.</p>
+	tensor space, but they never step on each other's toes. So the order in
+	which they are performed does not matter &mdash; that's what
+	commutativity means. And because the irreducible representations are
+	commutative, they can be block-diagonalized simultaneously. Because
+	these irreducible representations share blocks, we will find that they
+	can be naturally described by Young diagrams.</p>
 
-	<p> Schur-Weyl duality establishes more than commutivity. The duality
-	shows that the two groups <i>determine</i> eachother. They determine
-	eachother in the sense that knowing the general linear groups
+	<p> Schur-Weyl duality establishes more than commutativity. The duality
+	shows that the two groups <i>determine</i> each other. They determine
+	each other in the sense that knowing the general linear groups
 	determines the symmetry groups, and visa versa. This can be shown with
 	the double centralizer theorem, but I think it can be explained more
 	simply. </p>
@@ -95,7 +97,7 @@
 	transform must act identically on all slots of tensors. Otherwise, we
 	could permute the tensor such that the linear transform would not
 	commute. So permutations between ranks restricts linear transforms to
-	and within ranks. The duality estabishes that this relationship works
+	and within ranks. The duality establishes that this relationship works
 	both ways: linear transforms determine the symmetries available, and
 	symmetries determine the linear transforms. </p>
 
@@ -105,37 +107,171 @@
 	number of independent components of a tensor with arbitrary symmetries.
 	By encoding our symmetries as irreducible representations, we can
 	determine which linear transforms are necessary. The sum of the
-	products of the dimensions of the irreducible symmtery group dimensions
-	and the irreducible general linear group equals the dimension of the
-	underlying tensor space.</p>
+	products of the dimensions of the irreducible representations of the
+	symmetry group and the irreducible general linear group equals the
+	dimension of the underlying tensor space.</p>
 
 	<hr>
 
-	<h3>Young Diagram's</h3>
+	<h3>Young's Diagram</h3>
 
-	<p> In order to determine the dimension of the tensor space (or the number
-	of independent components) we need to compute the dimensions of the irreducible
-	symmetry groups and the irreducible general linear group elements. This can
-	be accomplished in various ways &mdash; I will utilize Young diagrams, or
-	Young tableauxs. </p>
+	<p> In order to determine the dimension of the tensor space (or the
+	number of independent components) we need to compute the dimensions of
+	the irreducible symmetry groups and the irreducible general linear
+	group elements. This can be accomplished in various ways &mdash; I will
+	utilize Young's diagram, which are also referred to as Young's
+	tableaux. </p>
 
-	<p> Clearly I am not a fan of typesetting equations and graphics. To be frank,
-	I just find it plain painful in basic html. So I will go realitively quickly
-	over Young diagrams, because they are a highly visual counting tool. Thankfully,
-	they are well documented tools, so hopefully the reader who wants to see the formula
-	and tables can find them. If not, send me an email and I will find a couple links
-	for you. </p>
+	<p> Clearly I am not a fan of typesetting equations and graphics. To be
+	frank, I just find it painful in html. So I will go relatively quickly
+	over Young's diagram, because they are a highly visual counting tool.
+	Thankfully, they are well documented elsewhere, so hopefully the reader
+	who wants to see the formula and tables can find them. If not, send me
+	an email and I will find a couple links for you. </p>
 
-	<p> Young diagrams are the way we can determine the dimension of the
-	irreducible representations. To construct the Young diagram, first list
-	all the partitions of the rank of the tensor. For instance, a rank four
-	tensor will have five partitions: (4), (3,1), (2,2), (2,1,1),
-	(1,1,1,1). Each partition corresponds to an irreducible representation.
-	(Recall the blocks, or subspaces, corresponding to the irreducible
-	representations of the symmetry group and the linear group can overlap.
-	Therefore, when the group the irreducible representation acts on is
-	not specified, it is to be understood that I refer to both groups). </p>
+	<p> Young's diagram is a way to determine the dimension of the
+	irreducible representations of the general linear and symmetry groups.
+	To construct the Young's diagram, first list all the partitions of the
+	rank of the tensor. For instance, a rank four tensor will have five
+	partitions: (4), (3,1), (2,2), (2,1,1), (1,1,1,1). Each partition of
+	four corresponds to an irreducible representation. (Recall that the
+	irreducible representations of the symmetry group and the general
+	linear group will overlap. Therefore, when I refer to groups I refer
+	the general linear group and the symmetry group simultaneously. </p>
 
-	<p></p>
+	<p> The partitions each have a physical interpretation in terms of
+	tensor symmetries. (4) corresponds to a fully-symmetric fourth rank
+	tensor. (3,1) corresponds to a tensor symmetric in three components and
+	antisymmetric in one pair of indices. (2,2) corresponds to a tensor
+	with two pairs of symmetric indices and simultaneous antisymmetry
+	between these two groups. (2,1,1) is a symmetric in one one pair of
+	indices and antisymmetric in the other three indices. (1,1,1,1)
+	corresponds to a fully antisymmetric tensor (i.e., a tensor of
+	Levi-Cevita type). So in terms of partition notation, commas split
+	antisymmetric groups of indices. Symmetric groups of tensors are
+	indicated by numbers greater than one in the partition. </p>
+
+	<p> The number of standard Young's tableaux for each partition
+	corresponds to the dimension of the symmetry group corresponding to
+	that partition. Formula to compute this number can be found online.
+	There is only one point of note: the number of standard Young's
+	diagrams can be computed without knowledge of the dimension of the
+	space that the tensor lives in. This should make sense &mdash; the
+	symmetric group only cares about how many slots there are for a
+	particular tensor (the rank), not necessarily how many values the slots
+	individually can take (the dimension). </p>
+
+	<p> The formula for the dimension of the irreducible representation of
+	the general linear group associated with a particular partition is a
+	little more involves. One has to compute the hook lengths and offsets
+	of every entry in the Young diagram, as well as have knowledge of the
+	dimension of the tensor space. Again, I will not list the explicit
+	formula. These are just counting details. Both formulas for the
+	dimensions of the irreducible representations require nothing more than
+	algebra. From a certain perspective, that is the beauty of Young's
+	diagram &mdash; they turn complex counting tasks into a sequence of
+	algebraic operations. </p>
+
+	<p> For an arbitrary tensor of rank <i>r</i> living in a space with
+	<i>n</i> dimensions, the number of independent components is
+	<i>n</i><sup><i>r</i></sup>. For example, a fourth rank tensor in three
+	dimensions will have 81 independent components (assuming no
+	restrictions on the components). If one has correctly computed the
+	dimension of the irreducible representations, the sum of the products
+	of the dimensions for the symmetric and general linear groups should
+	yield the same number as the above formula. This is an easy way to
+	confirm that the formula being used to compute the dimensions of the
+	irreducible representations associated with each partition are correct,
+	and the algebra has been done correctly. </p>
+
+	<p> Up to this point, no symmetry constraints have been leveraged to
+	decrease the number of independent components of a tensor. We will
+	leverage the Young's diagram one last time to decrease the dimension of
+	the symmetry parts associated with the Schur-Weyl duality. </p>
+
+	<hr>
+
+	<h3> Application of Symmetries </h3>
+
+	<p> Symmetries associated with a tensor will reduce the number of
+	independent components. In the language of the Schur-Weyl duality, the
+	dimension of the symmetry group associated with the irreducible
+	representation of the tensor will be decreased. We decrease the
+	dimension of the irreducible representation associated with each
+	partition by showing that certain symmetries between indices imply that
+	our tensor can be represented without certain irreducible
+	representation. </p>
+
+	<p><i> From the perspective of a geophysicist, this process feels like
+	orthogonal projection. We are going to identify irreducible
+	representations of the symmetry group that our tensor symmetries
+	cannot exist in. Analogously, these are directions in a model space
+	orthogonal that we cannot reach with our linear transform (the null
+	space). We are going to construct our tensor only our of the
+	necessary irreducible representations. This is just like
+	constructing our model out of a basis that spans our column space
+	and setting the part of the basis that spans the null space to
+	zero. Because we are incapable of representing models in the null
+	space, we can just forget about it without loosing any information.
+	Hopefully the analogy makes more sense as we move forward. </i></p>
+
+	<p> The dimension of the symmetry group (or multiplicity of the
+	symmetry group) indicates how many non trivial combinations of indices
+	each Young tableaux can hold. For instance, consider the partition (4).
+	This corresponds to a fully symmetric tensor. Four indices can only be
+	arranged in one non trivial way in a fully symmetric tensor, because
+	the order of indices is completely symmetric. Therefore the
+	multiplicity of the irreducible representation of (4) is one. Note this
+	result is true only for fourth rank tensor. </p>
+
+	<p> Another example. The (2,2) partition corresponds a fourth rank
+	tensor with two pairs of symmetric indices, with the pairs being
+	antisymmetric. There are only two non trivial ways to arrange these
+	groups: into the pairs (i,j) and (k,l) or (i,k) and (j,l). Any other
+	combination is rendered trivial by symmetry within groups. So the
+	multiplicity of the partition (2,2) is two. Again, this result is true
+	only for fourth rank tensors. But since the size of the symmetry group
+	associated with a given partition is insensitive to the dimension the
+	tensor is in, it is true for fourth rank tensors in any dimension. </p>
+
+	<p> Now the job becomes mechanical. For every non trivial arrangement
+	of indices, we need to see whether or not the symmetry constraints we
+	impose on our tensor require us to include this symmetry group.
+	Remember that for the general, unrestricted tensor all of the
+	irreducible representations of the symmetry group are necessary. After
+	imposing symmetry constraints, we will invalidate some of the non
+	trivial representations &mdash; in other words, we can prove that our
+	symmetry constraints do not allow our tensor to be represented in some
+	of the irreducible representations. Such proofs can be constructed by
+	assuming that the constraints and the symmetry corresponding to the
+	particular partition are both simultaneously true. If we can but the
+	tensor into an inconsistent state, then we can say the irreducible
+	irreducible representation is unnecessary for our tensor and reduce the
+	associated multiplicity. </p>
+
+	<p> Each non trivial symmetry in each group must be separately tested.
+	For instance, we return to our example of for the partition (2,2). Both
+	cases of (2,2) must be independently confirmed. If both cases are
+	consistent with our constraints, then the multiplicity stays at two. It
+	only one of the cases will hold and the other cases will not, we reduce
+	the associated multiplicity to one. If both cases lead to
+	contradictions, the multiplicity is reduced to zero. In practice, any
+	one of these situations can happen: for the elastic tensor (rank four)
+	in three dimensions, with symmetries following from Hooke's law and
+	adiabatic arguments, only one of the two cases of the (2,2) irreducible
+	representation is necessary. All cases of partitions (3,1), (2,1,1), and
+	(1,1,1,1) can be shown to be unnecessary. And the partition (4) is
+	entirely necessary. Tallying up the resulting dimensions with the
+	Schur-Weyl duality, the total number of independent components the elastic
+	tensor with symmetry demands in three dimensions is 21. </p>
+
+	<p><i> Now that we can see the entire workflow, maybe the analogy between
+	the irreducible representations and orthogonal projection makes more sense. The
+	Schur-Weyl duality acts like a linear combination of irreducible representations
+	of the general linear group (basis vectors) weighted by irreducible representations
+	of the symmetry group sizes (weights). Whenever we are orthogonal to a symmetry
+	group, we can reduce the necessary size of the space required to express our tensor
+	in &mdash; these unnecessary symmetry groups are in this sense orthogonal to
+	our tensor. </i></p>
     </body>
 </html>
