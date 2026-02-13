@@ -66,13 +66,21 @@
 
 	<h3>Uniqueness</h3>
 
-	<p> The singular values are unique. But the singular vectors are unique up to multiplication
-	of a complex phase factor (or sign for real matrix). If the singular values are repeated,
-	the subspaces of identical singular values can be rotated by unitary matrices. And of course
-	the matrix columns can be permuted, but usually we prevent this degree of freedom by
-	specifying that the singular values must be sorted along the diagonal of S in non-increasing order. </p>
+	<p> The singular values can be repeated, but the set of singular values is unique. </p>
 
-	<p> Long story short, the SVD decomposition is not unique. The singular values are unique. </p>
+	<p> The singular vectors are another story. They are unique up to a
+	global multiplication of columns of U and V by a complex phase factor
+	(or sign for real matrix). But there is another case of non-uniqueness
+	that plauges singular values regarding degenerate singular values. When
+	the singular values are repeated, the subspaces of identical singular
+	values can be rotated by some unitary matrix. (The details are slightly
+	above my head, so I am not going to elaborate on this technically). </p>
+
+	<p> And of course the matrix columns can be permuted, but usually we
+	prevent this degree of freedom by specifying that the singular values
+	must be sorted along the diagonal of S in non-increasing order. </p>
+
+	<p> Long story short, the SVD decomposition is not unique. The set of singular values are unique. </p>
 
 	<hr>
 
