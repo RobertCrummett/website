@@ -12,68 +12,79 @@
     <body>
 	<h3>The Singular Value Decomposition</h3>
 
-	<p>I am reviewing the properties and subtleties of this decomposition. So why
-	no write about them while I do!</p>
-
-	<p>The singular value decomposition (SVD) always exist for any matrix
-	of size <i>N</i> by <i>M</i> (the matrix can be any size in general).
-	The SVD breaks a matrix into the matrix product of three other
-	matrices: the matrix of left singular vectors, the singular vector
-	matrix, and the right singular vectors. Each have a clear geometric
-	interpretation, which I shall elaborate.</p>
+	<p> The basic intuition of the singular value decomposition (SVD) is elaborated.
+	Some geophysical perspective is drawn in as well, following Dr. William Menke's
+	book <a href="https://www.ldeo.columbia.edu/~menke/www_users_menke/gdadit/index.htm">Geophysical Data Analysis: Discrete Inverse Theory</a>
+	and class notes from Dr. Yaoguo Li's course "Machine Learning and Inverse Theory". </p>
 
 	<hr>
 
-	<h3>Basics</h3>
+	<h3>Intuition</h3>
 
-	<p>The left singular vectors <i>U</i> is of size <i>N</i> by <i>N</i>. The matrix is unitary,
-	meaning that its transpose is its inverse: <i>UU<sup>T</sup>=U<sup>T</sup>U=I</i>. The matrix
-	can be complex in general. It is unique, up to a column-wise phase shift. When real, the matrix
-	columns are unique up to the sign.</p>
+	<p> The SVD can be performed on any real or complex matrix. I am sure it can be performed
+	on other fields as well, although one may have to write it from scratch. But in essence, the SVD
+	does not have any special requirements about the dimension or the values of components of the
+	matrix. It could be a random matrix for all it cares! </p>
 
-	<p>The singular values <i>S</i> is of size <i>N</i> by <i>M</i>. The matrix is zero everywhere,
-	except along the main diagonal, which is composed of non-negative, real <i>singular values</i>.
-	The values along the diagonals are usually sorted in descending order. This choice renders the
-	singular value matrix unique.</p>
-	 
-	<p>The right singular vectors <i>V</i> is of size <i>M</i> by <i>M</i>. The matrix is unitary,
-	meaning that its transpose is its inverse: <i>VV<sup>T</sup>=V<sup>T</sup>V=I</i>. The matrix
-	can be complex in general. It is unique, up to a column-wise phase shift. When real, the matrix
-	columns are unique up to the sign.</p>
+	<p> The SVD breaks a matrix up into the matrix product of three other matrices. If G is a matrix of 
+	size NxM, the SVD of G = USV<sup>T</sup>. The matrix U is called the left singular vectors, of size
+	NxN. The singular values are ordered along the diagonal of the matrix S &mdash; otherwise the matrix
+	is zero. The singular value matrix is of size NxM. The last matrix V is the right singular vectors.
+	It has size MxM. </p>
 
-	<p><i>The SVD of an N by M matrix G will be denotes mathematically as G=USV<sup>T</sup></i></p>
+	<p> The left and right singular vector matrices (U and V respectively) are both unitary matrices.
+	Arguably the most important property of unitary matrices is that their transpose is equal to their
+	own inverse. So U<sup>H</sup>=U<sup>-1</sup> or equivalently U<sup>H</sup>U=UU<sup>H</sup>=I. The
+	same follows for V. Real unitary matrices are usually called orthogonal matrices. </p>
+
+	<p> The structure of the singular vector matrices facilitate geometric intuition. A unitary transformation
+	can be interpreted geometrically as a rotation. (Strictly, this is true only if the determinant is 1. If the
+	determinant is -1, it can be interpreted as a rotation and a reflection about some hyperplane). Rotations
+	change the values of components, but not the distances between points. </p>
+
+	<p> Based on our intuition about unitary transforms, we can interpret the SVD. The SVD says a matrix
+	can be interpreted as a rotation, followed by a scaling and reprojection, and finally another rotation.
+	The interpretation of the singular value matrix S as a scaling and reprojection follows from the
+	observation that only diagonal values are non zero, they are positive, and always real.
+	Since the SVD applies to any matrix, it says that any matrix can be interpreted as a rotation,
+	rescaling, reprojection, and rotation. </p>
 
 	<hr>
 
-	<h3>Properties</h3>
+	<h3>Relationship to the Eigenvalue Decomposition</h3>
 
-	<p>The general solution to any linear system can be decomposed into two portions: the solution
-	to the original linear system and any solutions to the homogeneous linear system. These two
-	portions will be referred to as the <i>particular</i> part and the <i>null</i> part respectively.
-	It turns out that the SVD cleanly divides the operator of any linear system into parts that act
-	on the particular and null vectors spaces associated with the arguments of the linear system.</p>
+	<p> While these two transformations look similar, they are only the same when the matrix
+	in question is positive semi-definite. A simple way to understand they are in general 
+	different is that eigenvalues can be complex and negative &mdash; however, singular
+	values are always real and strictly non-negative. </p>
 
-	<p>Singular values can be zero. The situation is that the singular value will annihilate the
-	associated right singular vector (a column vector of the right singular vectors). In other words,
-	the associated right singular vector lives in the null space of the operator. The number of zero
-	singular vectors is indicative of the dimension of the null space of the operator. The number of
-	non-zero singular values indicate the rank of the operator; this is just the rank-nullity theorem
-	dressed up in SVD clothing.</p>
+	<p> If G is the matrix in question, then U corresponds to the eigenvectors of GG<sup>*</sup>,
+	where G<sup>*</sup>=VS<sup>-1</sup>U<sup>T</sup> is the generalized inverse of the matrix G.
+	The right singular vectors correspond to the eigenvectors of the matrix G<sup>*</sup>G. </p>
 
-	<p>What we can deduce from the previous paragraph is that under-determined linear systems will
-	always have zero singular values! In practice, usually the singular values will appear to be
-	nearly zero &mdash; nearly zero is close enough. The interpretation of small singular values
-	is that these directions are damped, or suppressed, by the operator.</p>
+	<hr>
 
-	<p>We could say that in the forward problem that the operator has poor sensitivity to the small
-	singular value directions. Two inputs that are close but different will produce nearly identical
-	results after being scaled by a small number. So this should raise alarm bells for people interested
-	in inverting these linear systems. These insensitive directions will be <i>very</i> sensitive to small
-	changes when the SVD is inverted. Practically this manifests as instability.</p>
+	<h3>Uniqueness</h3>
 
-	<p>The condition number of an operator is the ratio of the largest singular value over the smallest
-	singular value. Large condition numbers are an indication that the linear system is ill-conditioned.
-	In practice, this might look like conditions numbers greater than 10000. Although that number is kind
-	of off-the-cuff.</p>
+	<p> The singular values are unique. But the singular vectors are unique up to multiplication
+	of a complex phase factor (or sign for real matrix). If the singular values are repeated,
+	the subspaces of identical singular values can be rotated by unitary matrices. And of course
+	the matrix columns can be permuted, but usually we prevent this degree of freedom by
+	specifying that the singular values must be sorted along the diagonal of S in non-increasing order. </p>
+
+	<p> Long story short, the SVD decomposition is not unique. The singular values are unique. </p>
+
+	<hr>
+
+	<h3>Algorithmic Concerns</h3>
+
+	<p> Computationally, there are several different ways to compute the SVD. But in general, the
+	algorithms have cubic temporal complexity and square spatial complexity. So for practical problems,
+	the SVD can be extremely expensive. Truncating the SVD can save us a lot in space and time, but
+	asymptotically the cost of the SVD does not change. The algorithms usually solve for the singular
+	vectors and singular values in decreasing order &mdash; so the smallest singular value is usually the
+	most expensive to solve for. The largest singular value is usually the cheapest to compute. </p>
+
+	<!-- To be written: SVD, Data Null Space, Model Null Space. -->
     </body>
-</html> 
+</html>
