@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>RNC &mdash; Writing</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
+	<link rel="manifest" href="../site.webmanifest">
+    </head>
+    <body>
+	<h3>Probability Theory &mdash; A Random Thought Regarding Change of Variables</h3>
+
+	<p>The change of variables formulas enable one to derive the probability distribution
+	of a random variable transformed by a continuous monotonic function. Or sections of
+	a function that is continuous and monotonic piecewise. This can be done to distributions
+	of random vectors as well as distributions of random variables &mdash; the rules do
+	not change majorly.</p>
+
+	<p>Using change of variables in the real world is usually tedious, so it usually gets
+	a bad reputation as a result. It is almost never elegant. The deteminant of the inverse
+	Jacobian has an interesting geometrical interpretation, but to be frank, the interesting
+	quality wears thin quickly. Thus my thoughts of this technique for manipulating
+	probability density functions were not so very high in the past.</p>
+
+	<p>But my opinion of this technique has recently flipped upside-down. The change of
+	variables formula is extremely practical from an engineering standpoint because it
+	enables on to transform simple probability distributions into very complicated
+	distributions with minimal dependencies.</p>
+
+	<p>Take for instance the uniform distribution. One may implement this distribution
+	with the <a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> algorithm,
+	or maybe a <a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift</a>, or maybe even something
+	else. The algorithm is really not of consequence to this discussion. By only implementing one
+	pseudo-random number generator, an engineer can create normal distributions, log-normal distributions,
+	exponential distributions, you name it. Just transform the uniform random variable appropriately.</p>
+
+	<p>The change of variables formula allow the average engineer to remove dependencies in
+	their projects. This eliminates surface area for bugs to creep in, complex APIs from
+	stalling development and maintenance, and a place to focus energy for optimization purposes.
+	And to top it all off, application of these formulas usually requires nothing more than standard
+	vector calculus!</p>
+
+	<p>For all these reasons, I am beginning to appreciate the change of variables formulas more.</p>
+
+	<!-- @todo Say something about the Box-Muller transform, or leave that to another post? -->
+    </body>
+</html>
