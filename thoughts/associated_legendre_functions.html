@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>RNC &mdash; Writing</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
+	<link rel="manifest" href="../site.webmanifest">
+    </head>
+    <body>
+            <h3>Associated Legendre Function Conventions</h3>
+
+            <p>
+            Associated Legendre functions pop up all over the place in
+            mathematical physics, because they form a complete basis
+            on the surface of the 3D sphere. Thus, solutions to problems
+            with radial symmetry are often expressed in them. Because the
+            Earth is spherical *cough*, geodesists often utilize them.
+            EGM84, EGM96, and EGM2008 were all released as harmonic
+            coefficients. Ergo, my interest.
+            </p>
+
+            <p>
+            But being so popular in so many fields of applied mathematics,
+            many different customs have arisen around them. Different
+            normalizations, adjustments, and conventions. When translating
+            between different fields of physics, or even between different
+            books in the same field, these conventions can really confuse
+            me if I do not remember them. Ergo, this post.
+            </p>
+
+            <hr>
+
+            <p>
+            Scaling factors are the first detail covered. Different fields use
+            different scaling factors. In physics proper, I am under the
+            impression unnormalized associated Legendre functions (alf's from
+            now on) are the norm. In geomagnetism, Schmidt semi-normalization is
+            common. And in geodesy, fully normalized alf's are customary.
+            </p>
+
+            <p>
+            Mathematically, scaling factors control what the basis integrates to
+            over the unit sphere. So it makes sense people would change it to
+            suit their particular flavor of physics.
+            </p>
+
+            <p>
+            Practically, scaling factors control some of the numerical behavior
+            of alf's.  Unnormalized alf's will overflow quickly (around degree
+            30 for 32-bit IEEE floats, and around degree 150 for 64-bit IEEE
+            floats). This is unacceptably low number of basis functions in
+            fields like geodesy and geomagnetism. Normalizations keep the
+            alf's from overflowing sooner than they otherwise would.
+            </p>
+
+            <p> Phase factors are another issue. I do not quite understand the
+            origins of the Condon-Shortly phase factor, but occasionally all of
+            the odd degree alf functions are multiplied by negative one. Watch
+            out for this, it will cause sign errors everywhere. </p>
+
+            <!-- TODO Learn more about the phase factors. -->
+
+            <hr>
+
+            <p>
+            Below is a routine to compute fully normalized alf's. It is stable
+            up to degrees ~2700. I have wrote functions like these before, but I
+            always end up loosing the implementation and needing to rewrite
+            them. So here it is, once and for all copy and pastable. 
+            </p>
+
+            <p>
+            Reference: 
+            <a href="https://doi.org/10.1007/s00190-002-0216-2">
+                    Holmes and Featherstone, 2002</a>. Well written paper, if I
+            may insert my opinion. Of course I can, this is <i>my</i> site!
+            </p>
+
+            <code>
+            (require&nbsp;racket/format)<br>
+            (require&nbsp;racket/flonum)<br>
+            <br>
+            (define&nbsp;(prod-m&nbsp;m)<br>
+            &nbsp;&nbsp;;;&nbsp;Compute&nbsp;the&nbsp;product<br>
+            &nbsp;&nbsp;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m<br>
+            &nbsp;&nbsp;;;&nbsp;&nbsp;prod-m&nbsp;=&nbsp;sqrt(3)&nbsp;*&nbsp;prod&nbsp;sqrt((2i&nbsp;+&nbsp;1)&nbsp;/&nbsp;(2i))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;all&nbsp;m&nbsp;&gt;=&nbsp;1<br>
+            &nbsp;&nbsp;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i=2<br>
+            &nbsp;&nbsp;;;<br>
+            &nbsp;&nbsp;;;&nbsp;reasonably&nbsp;fast.&nbsp;I&nbsp;could&nbsp;not&nbsp;speed&nbsp;this&nbsp;up&nbsp;by&nbsp;implementing&nbsp;it&nbsp;in&nbsp;terms<br>
+            &nbsp;&nbsp;;;&nbsp;of&nbsp;a&nbsp;centered&nbsp;binomial&nbsp;coefficient,&nbsp;although&nbsp;this&nbsp;is&nbsp;possible.&nbsp;To&nbsp;see,<br>
+            &nbsp;&nbsp;;;&nbsp;expand&nbsp;product&nbsp;into&nbsp;double&nbsp;factorials.<br>
+            &nbsp;&nbsp;(if&nbsp;(=&nbsp;m&nbsp;0)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.0<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;loop&nbsp;([i&nbsp;2]&nbsp;[acc&nbsp;1.0])<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(&gt;&nbsp;i&nbsp;m)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(flsqrt&nbsp;(fl*&nbsp;3.0&nbsp;acc))<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let*&nbsp;([fl-i&nbsp;(exact-&gt;inexact&nbsp;i)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[two-i&nbsp;(fl*&nbsp;2.0&nbsp;fl-i)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[term&nbsp;(fl/&nbsp;(fl+&nbsp;two-i&nbsp;1.0)&nbsp;two-i)])<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(loop&nbsp;(+&nbsp;i&nbsp;1)&nbsp;(fl*&nbsp;acc&nbsp;term)))))))<br>
+            <br>
+            (define&nbsp;(a-nm&nbsp;n&nbsp;m)<br>
+            &nbsp;&nbsp;(let*&nbsp;([fl-n&nbsp;(exact-&gt;inexact&nbsp;n)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[fl-m&nbsp;(exact-&gt;inexact&nbsp;m)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[two-n&nbsp;(fl*&nbsp;2.0&nbsp;fl-n)])<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(flsqrt&nbsp;(fl/&nbsp;(fl*&nbsp;(fl-&nbsp;two-n&nbsp;1.0)&nbsp;(fl+&nbsp;two-n&nbsp;1.0))<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fl*&nbsp;(fl-&nbsp;fl-n&nbsp;fl-m)&nbsp;(fl+&nbsp;fl-n&nbsp;fl-m))))))<br>
+            <br>
+            (define&nbsp;(b-nm&nbsp;n&nbsp;m)<br>
+            &nbsp;&nbsp;(let*&nbsp;([fl-n&nbsp;(exact-&gt;inexact&nbsp;n)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[fl-m&nbsp;(exact-&gt;inexact&nbsp;m)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[two-n&nbsp;(fl*&nbsp;2.0&nbsp;fl-n)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[n-plus-m&nbsp;(fl+&nbsp;fl-n&nbsp;fl-m)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[n-minus-m&nbsp;(fl-&nbsp;fl-n&nbsp;fl-m)])<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(flsqrt&nbsp;(fl/&nbsp;(fl*&nbsp;(fl+&nbsp;two-n&nbsp;1.0)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fl*&nbsp;(fl-&nbsp;n-plus-m&nbsp;1.0)&nbsp;(fl-&nbsp;n-minus-m&nbsp;1.0)))<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fl*&nbsp;n-minus-m&nbsp;(fl*&nbsp;n-plus-m&nbsp;(fl-&nbsp;two-n&nbsp;3.0)))))))<br>
+            <br>
+            (define&nbsp;(f-nm&nbsp;n&nbsp;m)<br>
+            &nbsp;&nbsp;(let*&nbsp;([fl-n&nbsp;(exact-&gt;inexact&nbsp;n)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[fl-m&nbsp;(exact-&gt;inexact&nbsp;m)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[two-n&nbsp;(fl*&nbsp;2.0&nbsp;fl-n)])<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(flsqrt&nbsp;(fl/&nbsp;(fl*&nbsp;(fl-&nbsp;(fl*&nbsp;fl-n&nbsp;fl-n)&nbsp;(fl*&nbsp;fl-m&nbsp;fl-m))&nbsp;(fl+&nbsp;two-n&nbsp;1.0))<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fl-&nbsp;two-n&nbsp;1.0)))))<br>
+            <br>
+            (define&nbsp;(compute-scaled-alf&nbsp;degree&nbsp;order&nbsp;theta)<br>
+            &nbsp;&nbsp;;;&nbsp;Implements&nbsp;the&nbsp;Holmes&nbsp;&amp;&nbsp;Featherstone&nbsp;(2002)&nbsp;first&nbsp;modified&nbsp;forward&nbsp;column<br>
+            &nbsp;&nbsp;;;&nbsp;technique&nbsp;to&nbsp;compute&nbsp;scaled,&nbsp;stable&nbsp;high&nbsp;order&nbsp;and&nbsp;degree&nbsp;fully&nbsp;normalized<br>
+            &nbsp;&nbsp;;;&nbsp;associated&nbsp;Legendre&nbsp;functions&nbsp;(alf's).<br>
+            &nbsp;&nbsp;;;<br>
+            &nbsp;&nbsp;;;&nbsp;Returns&nbsp;a&nbsp;float&nbsp;scaled-alf,&nbsp;which&nbsp;is&nbsp;the&nbsp;value&nbsp;of&nbsp;the&nbsp;associated&nbsp;Legendre<br>
+            &nbsp;&nbsp;;;&nbsp;function&nbsp;scaled&nbsp;by&nbsp;1e-280&nbsp;and&nbsp;with&nbsp;u^m&nbsp;factored&nbsp;out.<br>
+            &nbsp;&nbsp;(let*&nbsp;([fl-theta&nbsp;(exact-&gt;inexact&nbsp;theta)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[t&nbsp;(flcos&nbsp;fl-theta)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[u&nbsp;(flsin&nbsp;fl-theta)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[fl-order&nbsp;(exact-&gt;inexact&nbsp;order)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[pi-m&nbsp;(fl*&nbsp;(prod-m&nbsp;order)&nbsp;1e-280)])<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(iter&nbsp;n&nbsp;previous-alf-1&nbsp;previous-alf-2)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let*&nbsp;([fl-n&nbsp;(exact-&gt;inexact&nbsp;n)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[current-alf<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(fl=&nbsp;previous-alf-2&nbsp;0.0)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fl*&nbsp;(a-nm&nbsp;n&nbsp;order)&nbsp;(fl*&nbsp;t&nbsp;previous-alf-1))<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fl-&nbsp;(fl*&nbsp;(a-nm&nbsp;n&nbsp;order)&nbsp;(fl*&nbsp;t&nbsp;previous-alf-1))<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fl*&nbsp;(b-nm&nbsp;n&nbsp;order)&nbsp;previous-alf-2)))])<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(=&nbsp;n&nbsp;degree)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;current-alf<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(iter&nbsp;(+&nbsp;n&nbsp;1)&nbsp;current-alf&nbsp;previous-alf-1))))<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(=&nbsp;degree&nbsp;order)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pi-m<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(iter&nbsp;(+&nbsp;order&nbsp;1)&nbsp;pi-m&nbsp;0.0))))<br>
+            <br>
+            <br>
+            (define&nbsp;(alf&nbsp;degree&nbsp;order&nbsp;theta)<br>
+            &nbsp;&nbsp;;;&nbsp;High&nbsp;order&nbsp;and&nbsp;degree,&nbsp;fully-normalized&nbsp;associated&nbsp;Legendre&nbsp;functions,<br>
+            &nbsp;&nbsp;;;&nbsp;stable&nbsp;up&nbsp;to&nbsp;degree&nbsp;and&nbsp;order&nbsp;~2700.<br>
+            &nbsp;&nbsp;;;<br>
+            &nbsp;&nbsp;;;&nbsp;The&nbsp;majority&nbsp;of&nbsp;the&nbsp;logic&nbsp;is&nbsp;contained&nbsp;in&nbsp;the&nbsp;routine<br>
+            &nbsp;&nbsp;;;&nbsp;compute-scaled-alf,&nbsp;which&nbsp;implements&nbsp;the&nbsp;first&nbsp;modified<br>
+            &nbsp;&nbsp;;;&nbsp;forward&nbsp;column&nbsp;routine&nbsp;provided&nbsp;by&nbsp;Holmes&nbsp;&amp;&nbsp;Featherstone&nbsp;(2002)<br>
+            &nbsp;&nbsp;;;&nbsp;<br>
+            &nbsp;&nbsp;;;&nbsp;Paper:&nbsp;https://doi.org/10.1007/s00190-002-0216-2<br>
+            &nbsp;&nbsp;(unless&nbsp;(&lt;=&nbsp;0.0&nbsp;theta&nbsp;pi)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;'theta-out-of-range<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Colatitude&nbsp;theta&nbsp;must&nbsp;be&nbsp;in&nbsp;range&nbsp;[0.0,&nbsp;pi]&nbsp;(got&nbsp;~a)"&nbsp;theta))<br>
+            &nbsp;&nbsp;(when&nbsp;(&lt;&nbsp;degree&nbsp;0)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;'invalid-degree&nbsp;"degree&nbsp;cannot&nbsp;be&nbsp;negative&nbsp;(got&nbsp;~a)"&nbsp;degree))<br>
+            &nbsp;&nbsp;(when&nbsp;(&gt;&nbsp;(abs&nbsp;order)&nbsp;degree)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;'invalid-order<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"magnitude&nbsp;of&nbsp;order&nbsp;|m|&nbsp;(got&nbsp;~a)&nbsp;cannot&nbsp;be&nbsp;greater&nbsp;than&nbsp;degree&nbsp;n&nbsp;(got&nbsp;~a)"<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;order&nbsp;degree))<br>
+            &nbsp;&nbsp;(let*&nbsp;([fl-theta&nbsp;(exact-&gt;inexact&nbsp;theta)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[scaled-alf&nbsp;(compute-scaled-alf&nbsp;degree&nbsp;order&nbsp;fl-theta)]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[um&nbsp;(flexpt&nbsp;(flsin&nbsp;fl-theta)&nbsp;(exact-&gt;inexact&nbsp;order))])<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(fl*&nbsp;scaled-alf&nbsp;(fl*&nbsp;um&nbsp;1e280))))<br>
+            </code>
+    </body>
+</html>
+
