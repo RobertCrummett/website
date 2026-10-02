@@ -2,6 +2,8 @@
 // src/posts/ and in thoughts/ (id.typ -> thoughts/id.html).
 // Set `listed: false` to publish a page without listing it on the index.
 #let posts = (
+  (id: "youngs_inequality", title: "Proof of Young's inequality", date: "10-2-26",
+   summary: "A short and sweet proof of Young's inequality."),
   (id: "probability_theory_coupling", title: "Probability Theory — Coupling", date: "09-07-26",
    summary: "A basic introduction to coupling, with an eye toward Markov processes and optimal transport."),
   (id: "rotated_coordinate_reference_systems", title: "Rotated Coordinate Reference Systems", date: "07-17-26",

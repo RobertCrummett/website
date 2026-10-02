@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>RNC — Writing</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png"><link rel="manifest" href="../site.webmanifest"><style>/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
+
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
+
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
+
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
+
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
+
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}</style></head><body><h3>Proof of Young's inequality</h3><p>This proof leverages properties of convex functions and Hölder conjugates. I like the proof because it is small, and reasonable.</p><p>Define <math><mi>𝑓</mi><mrow><mo stretchy="false">(</mo><mi>𝑡</mi><mo stretchy="false">)</mo></mrow><mo>=</mo><msup><mi>𝑡</mi><mi>𝑞</mi></msup><mi>/</mi><mi>𝑞</mi></math>, a convex function on the interval <math><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mi>∞</mi><mo stretchy="false">)</mo></mrow></math>.</p><p>One characterization of convex functions is that they are everywhere above their tangent lines. For our convex function <math><mi>𝑓</mi><mrow><mo stretchy="false">(</mo><mi>𝑡</mi><mo stretchy="false">)</mo></mrow></math>, this means that for any <math><mi>𝑏</mi><mo>,</mo><mi>𝑐</mi><mo>≥</mo><mn>0</mn></math>,</p><math display="block"><mi>𝑓</mi><mrow><mo stretchy="false">(</mo><mi>𝑏</mi><mo stretchy="false">)</mo></mrow><mo>≥</mo><mi>𝑓</mi><mrow><mo stretchy="false">(</mo><mi>𝑐</mi><mo stretchy="false">)</mo></mrow><mo>+</mo><msup><mi>𝑓</mi><mo>′</mo></msup><mrow><mo stretchy="false">(</mo><mi>𝑐</mi><mo stretchy="false">)</mo></mrow><mrow><mo stretchy="false">(</mo><mi>𝑏</mi><mo>−</mo><mi>𝑐</mi><mo stretchy="false">)</mo></mrow><mi>.</mi></math><p>Let <math><mi>𝑝</mi></math> and <math><mi>𝑞</mi></math> be Hölder conjugates (i.e. <math><mn>1</mn><mi>/</mi><mi>𝑝</mi><mo>+</mo><mn>1</mn><mi>/</mi><mi>𝑞</mi><mo>=</mo><mn>1</mn></math> and <math><mi>𝑝</mi><mo>,</mo><mi>𝑞</mi><mo>></mo><mn>1</mn></math>).</p><p>Now let <math><mi>𝑐</mi><mo>=</mo><msup><mi>𝑎</mi><mrow><mi>𝑝</mi><mo lspace="0em" rspace="0em">−</mo><mn>1</mn></mrow></msup></math>.</p><math display="block"><mtable class="multiline-equation aligned"><mtr><mtd><mfrac><msup><mi>𝑏</mi><mi>𝑞</mi></msup><mi>𝑞</mi></mfrac></mtd><mtd><mo form="infix">≥</mo><mfrac><msup><mi>𝑎</mi><mrow><mrow><mo stretchy="false">(</mo><mi>𝑝</mi><mo lspace="0em" rspace="0em">−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mi>𝑞</mi></mrow></msup><mi>𝑞</mi></mfrac><mo>+</mo><msup><mi>𝑎</mi><mrow><mrow><mo stretchy="false">(</mo><mi>𝑝</mi><mo lspace="0em" rspace="0em">−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mrow><mo stretchy="false">(</mo><mi>𝑞</mi><mo lspace="0em" rspace="0em">−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow></msup><mrow><mo stretchy="false">(</mo><mi>𝑏</mi><mo>−</mo><msup><mi>𝑎</mi><mrow><mi>𝑝</mi><mo lspace="0em" rspace="0em">−</mo><mn>1</mn></mrow></msup><mo stretchy="false">)</mo></mrow></mtd></mtr><mtr><mtd></mtd><mtd><mo form="infix">=</mo><mfrac><msup><mi>𝑎</mi><mi>𝑝</mi></msup><mi>𝑞</mi></mfrac><mo>+</mo><mi>𝑎</mi><mrow><mo stretchy="false">(</mo><mi>𝑏</mi><mo>−</mo><msup><mi>𝑎</mi><mrow><mi>𝑝</mi><mo lspace="0em" rspace="0em">−</mo><mn>1</mn></mrow></msup><mo stretchy="false">)</mo></mrow><mo>=</mo><mfrac><msup><mi>𝑎</mi><mi>𝑝</mi></msup><mi>𝑞</mi></mfrac><mo>+</mo><mi>𝑎</mi><mi>𝑏</mi><mo>−</mo><msup><mi>𝑎</mi><mi>𝑝</mi></msup><mo>=</mo><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>𝑞</mi><mo stretchy="false">)</mo></mrow><mfrac><msup><mi>𝑎</mi><mi>𝑝</mi></msup><mi>𝑞</mi></mfrac><mo>+</mo><mi>𝑎</mi><mi>𝑏</mi></mtd></mtr><mtr><mtd></mtd><mtd><mo form="infix">=</mo><mo form="prefix">−</mo><mfrac><msup><mi>𝑎</mi><mi>𝑝</mi></msup><mi>𝑝</mi></mfrac><mo>+</mo><mi>𝑎</mi><mi>𝑏</mi><mi>.</mi></mtd></mtr></mtable></math><p>The inequality follows by rearrangement. The jumps between the lines are made by recognizing Hölder conjugate identities. The jump from the first line to the second line follows after recognizing <math><mrow><mo stretchy="false">(</mo><mi>𝑝</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mi>𝑞</mi><mo>=</mo><mi>𝑝</mi></math> and <math><mrow><mo stretchy="false">(</mo><mi>𝑝</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mrow><mo stretchy="false">(</mo><mi>𝑞</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mo>=</mo><mn>1</mn></math>. The jump from the second line to the third line follows after seeing <math><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>𝑞</mi><mo stretchy="false">)</mo></mrow><mi>/</mi><mi>𝑞</mi><mo>=</mo><mo form="prefix">−</mo><mn>1</mn><mi>/</mi><mi>𝑝</mi></math>. This fits in my head!</p></body></html>
