@@ -1,0 +1,17 @@
+#!/bin/sh
+# Rebuild the site before every commit so index.html and thoughts/*.html are
+# never stale, then stage the regenerated files. Aborts the commit if the build
+# fails. Enable once per clone:  git config core.hooksPath hooks
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+if ! command -v typst >/dev/null 2>&1; then
+    echo "pre-commit: typst not found; cannot rebuild the site." >&2
+    exit 1
+fi
+
+./build.sh >/dev/null 2>.build.log || {
+    echo "pre-commit: site build failed:" >&2
+    grep -v -E "hint|experimental|^\s*$" .build.log >&2
+    exit 1
+}
+git add index.html thoughts/*.html
