@@ -17,7 +17,7 @@
 
 // One page per post.
 #for p in posts [
-  #page("thoughts/" + p.id + ".html", "RNC — Writing", prefix: "../", heading: p.at("heading", default: p.title))[
+  #page("thoughts/" + p.id + ".html", "RNC — Writing", prefix: "../", heading: p.title)[
     #include("src/posts/" + p.id + ".typ")
   ] #label(p.id)
 ]

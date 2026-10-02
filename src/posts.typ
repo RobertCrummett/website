@@ -1,7 +1,6 @@
 // Registry of posts, newest first. Each entry `id` is the file name in
 // src/posts/ and in thoughts/ (id.typ -> thoughts/id.html).
 // Set `listed: false` to publish a page without listing it on the index.
-// `heading` overrides the page heading when it differs from the index title.
 #let posts = (
   (id: "probability_theory_coupling", title: "Probability Theory — Coupling", date: "09-07-26",
    summary: "A basic introduction to coupling, with an eye toward Markov processes and optimal transport."),
@@ -9,11 +8,11 @@
    summary: "How to create rotated coordinate reference systems in proj or WKT formats."),
   (id: "associated_legendre_functions", title: "Associated Legendre Function Conventions", date: "07-14-26",
    summary: "Discussion of alf conventions. Small implementation of fully-normalized, ultra high degree and order alf's."),
-  (id: "fast_fourier_transform", title: "Fast Fourier Transform", heading: "Fast Fourier Transform Example", date: "02-26-26",
+  (id: "fast_fourier_transform", title: "Fast Fourier Transform", date: "02-26-26",
    summary: "Small implementation of the Fast Fourier Transform."),
   (id: "probability_theory_change_of_variables", title: "Probability Theory — A Random Thought Regarding Change of Variables", date: "02-18-26",
    summary: "The change of variables formulas is a practical tool to remove codebase complexity."),
-  (id: "reformatting_usb_drives", title: "Reformatting USB Drive", heading: "Reformatting USB Sticks", date: "02-17-26",
+  (id: "reformatting_usb_drives", title: "Reformatting USB Drive", date: "02-17-26",
    summary: "Lessons I learned while reformatting a USB drive."),
   (id: "monotone_convergence_theorem", title: "Monotone Convergence Theorem", date: "02-16-26",
    summary: "A brief overview of Lebesgue's famous monotone convergence theorem."),
