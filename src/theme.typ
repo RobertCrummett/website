@@ -8,6 +8,22 @@
   body
 }
 
+// Browsers render a bare <mo>(</mo> as a stretchy fence: a taller glyph with
+// extra side spacing, so f(x) looks like f ( x ). Typst marks every
+// delimiter group `lr` as stretchy, so unwrap the groups that don't need it.
+// Groups around tall content (fractions, roots, matrices) keep scaling.
+#let tall-funcs = (math.frac, math.binom, math.sqrt, math.root, math.mat, math.vec, math.cases)
+#let is-tall(c) = {
+  if type(c) == content {
+    if c.func() in tall-funcs { return true }
+    c.fields().values().any(is-tall)
+  } else if type(c) == array { c.any(is-tall) } else { false }
+}
+#let tight-delimiters(body) = {
+  show math.lr: it => if is-tall(it.body) { it } else { html.elem("mrow", it.body) }
+  body
+}
+
 // Horizontal rule, for use in posts: #hr
 #let hr = html.elem("hr")
 
@@ -25,6 +41,7 @@
     ]
     #html.elem("body")[
       #show: heading-levels
+      #show: tight-delimiters
       #if heading != none [#html.elem("h3")[#heading]]
       #body
     ]
