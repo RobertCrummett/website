@@ -1,82 +1,106 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>RNC &mdash; Writing</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
-	<link rel="manifest" href="../site.webmanifest">
-    </head>
-    <body>
-	<h3>Probability Theory &mdash; Convergence Program</h3>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>RNC — Writing</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png"><link rel="manifest" href="../site.webmanifest"><style>/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
 
-	<p>
-	Here we write a simple program that demonstrates that a sequence
-	of random variables converging in probability will demonstrate
-	<i>practical</i> differences, when compared to a sequence that
-	converges almost surely. This post was inspired by a lecture given
-	Dr. Luis Tenorio in mathematical statistics on January 14<sup>th</sup>,
-	2026.
-	</p>
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
 
-	<hr>
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
 
-	<p>
-	Sequences of random variables that converge in probability and
-	sequences of random variables that converge almost surely are
-	practically distinguishable. We can tell them apart simply by
-	looking at the sequences for long enough.
-	</p>
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
 
-	<p>
-	The following program will output <code>n</code> random
-	variable's from a sequence that converges in probability, but
-	not almost surely. If the output is redirected to a plotting
-	application, one will see for large values <code>n</code>, the
-	function <code>random_sequence(n)</code> will still
-	occasionally return non-zero values that increase in size.
-	</p>
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
 
-	<p>
-	If the function converged in probability to zero, eventually
-	the values of the function would be bounded above after some
-	index <code>n</code>. Clearly this is not the case for random
-	sequences that converge in probability. The practical
-	difference in these sequences is the "spikes" in the values of
-	the sequence.
-	</p>
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}</style></head><body><h3>Probability Theory — Convergence Program</h3><p>Here we write a simple program that demonstrates that a sequence of random variables converging in probability will demonstrate <em>practical</em> differences, when compared to a sequence that converges almost surely. This post was inspired by a lecture given Dr. Luis Tenorio in mathematical statistics on January 14<sup>th</sup>, 2026.</p><hr><p>Sequences of random variables that converge in probability and sequences of random variables that converge almost surely are practically distinguishable. We can tell them apart simply by looking at the sequences for long enough.</p><p>The following program will output <code>n</code> random variable’s from a sequence that converges in probability, but not almost surely. If the output is redirected to a plotting application, one will see for large values <code>n</code>, the function <code>random_sequence(n)</code> will still occasionally return non-zero values that increase in size.</p><p>If the function converged in probability to zero, eventually the values of the function would be bounded above after some index <code>n</code>. Clearly this is not the case for random sequences that converge in probability. The practical difference in these sequences is the “spikes” in the values of the sequence.</p><hr><pre><code data-lang="c"><span style="color: #d73948">#include</span> <span style="color: #198810">&lt;</span><span style="color: #198810">stdio.h</span><span style="color: #198810">></span>
+<span style="color: #d73948">typedef</span> <span style="color: #d73948">unsigned</span> <span style="color: #d73948">long</span> <span style="color: #d73948">long</span> <span style="color: #4b69c6">uint</span>; <span style="color: #74747c">/*</span><span style="color: #74747c"> 64-bit integer. </span><span style="color: #74747c">*/</span>
 
-	<hr>
+<span style="color: #74747c">/*</span><span style="color: #74747c"> Xorshift pseudo random number generator. </span><span style="color: #74747c">*/</span>
+<span style="color: #d73948">static</span> <span style="color: #4b69c6">uint</span> x <span style="color: #d73948">=</span> <span style="color: #b60157">0x</span><span style="color: #b60157">94D34A34EC98EEF3</span>; <span style="color: #74747c">/*</span><span style="color: #74747c"> Seed value. </span><span style="color: #74747c">*/</span>
+<span style="color: #4b69c6">uint</span> <span style="color: #4b69c6">rand</span>(<span style="color: #d73948">void</span>) {
+    <span style="color: #d73948">return</span> x <span style="color: #d73948">=</span> (x <span style="color: #d73948">^=</span> ((x <span style="color: #d73948">^=</span> ((x <span style="color: #d73948">^=</span> (x <span style="color: #d73948">&lt;&lt;</span> <span style="color: #b60157">13</span>)) <span style="color: #d73948">>></span> <span style="color: #b60157">7</span>)) <span style="color: #d73948">&lt;&lt;</span> <span style="color: #b60157">17</span>));
+}
 
-	<code>
-	    #include &lt;stdio.h&gt;<br>
-	    typedef unsigned long long uint; /* 64-bit integer. */<br><br>
-	    /* Xorshift pseudo random number generator. */<br>
-	    static uint x = 0x94D34A34EC98EEF3; /* Seed value. */<br>
-	    uint rand(void) {<br>
-	    &#160;&#160;&#160;&#160;return x = (x ^= ((x ^= ((x ^= (x &lt;&lt; 13)) &gt;&gt; 7)) &lt;&lt; 17));<br>
-	    }<br><br>
-	    /* Standard uniform distribution. */<br>
-	    double uniform(void) {<br>
-	    &#160;&#160;&#160;&#160;return (double)rand() / 0xFFFFFFFFFFFFFFFF;<br>
-	    }<br><br>
-	    /* A random sequence that converges in probability,<br>
-	    &#160;* but will not converge almost surely. */<br>
-	    uint random_sequence(uint n) {<br>
-	    &#160;&#160;&#160;&#160;return uniform() &lt; 1.0 / n ? n : 0;<br>
-	    }<br><br>
-	    int main(void) {<br>
-	    &#160;&#160;&#160;&#160;const uint n = 10000; /* Length of sequence to observe. */<br><br>
-	    &#160;&#160;&#160;&#160;/* Even for very large values of n, there will still be<br>
-	    &#160;&#160;&#160;&#160;&#160;* &quot;spikes&quot;. If this random sequence converged almost<br>
-	    &#160;&#160;&#160;&#160;&#160;* surely, these spikes would not happen. */<br>
-	    &#160;&#160;&#160;&#160;for (uint i = 1; i &lt; n; i++) {<br>
-	    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;printf(&quot;%llu\n&quot;, random_sequence(i));<br>
-	    &#160;&#160;&#160;&#160;}<br><br>
-	    &#160;&#160;&#160;&#160;return 0;<br>
-	    }
-	</code>
-    </body>
-</html>
+<span style="color: #74747c">/*</span><span style="color: #74747c"> Standard uniform distribution. </span><span style="color: #74747c">*/</span>
+<span style="color: #d73948">double</span> <span style="color: #4b69c6">uniform</span>(<span style="color: #d73948">void</span>) {
+    <span style="color: #d73948">return</span> (<span style="color: #d73948">double</span>)<span style="color: #4b69c6">rand</span>() <span style="color: #d73948">/</span> <span style="color: #b60157">0x</span><span style="color: #b60157">FFFFFFFFFFFFFFFF</span>;
+}
+
+<span style="color: #74747c">/*</span><span style="color: #74747c"> A random sequence that converges in probability,</span>
+<span style="color: #74747c"> </span><span style="color: #74747c">*</span><span style="color: #74747c"> but will not converge almost surely. </span><span style="color: #74747c">*/</span>
+<span style="color: #4b69c6">uint</span> <span style="color: #4b69c6">random_sequence</span>(<span style="color: #4b69c6">uint</span> n) {
+    <span style="color: #d73948">return</span> <span style="color: #4b69c6">uniform</span>() <span style="color: #d73948">&lt;</span> <span style="color: #b60157">1</span><span style="color: #b60157">.</span><span style="color: #b60157">0</span> <span style="color: #d73948">/</span> n <span style="color: #d73948">?</span> n <span style="color: #d73948">:</span> <span style="color: #b60157">0</span>;
+}
+
+<span style="color: #d73948">int</span> <span style="color: #4b69c6">main</span>(<span style="color: #d73948">void</span>) {
+    <span style="color: #d73948">const</span> <span style="color: #4b69c6">uint</span> n <span style="color: #d73948">=</span> <span style="color: #b60157">10000</span>; <span style="color: #74747c">/*</span><span style="color: #74747c"> Length of sequence to observe. </span><span style="color: #74747c">*/</span>
+
+    <span style="color: #74747c">/*</span><span style="color: #74747c"> Even for very large values of n, there will still be</span>
+<span style="color: #74747c">     </span><span style="color: #74747c">*</span><span style="color: #74747c"> "spikes". If this random sequence converged almost</span>
+<span style="color: #74747c">     </span><span style="color: #74747c">*</span><span style="color: #74747c"> surely, these spikes would not happen. </span><span style="color: #74747c">*/</span>
+    <span style="color: #d73948">for</span> (<span style="color: #4b69c6">uint</span> i <span style="color: #d73948">=</span> <span style="color: #b60157">1</span>; i <span style="color: #d73948">&lt;</span> n; i<span style="color: #d73948">++</span>) {
+        <span style="color: #4b69c6">printf</span>(<span style="color: #198810">"</span><span style="color: #b60157">%llu</span><span style="color: #1d6c76">\n</span><span style="color: #198810">"</span>, <span style="color: #4b69c6">random_sequence</span>(i));
+    }
+
+    <span style="color: #d73948">return</span> <span style="color: #b60157">0</span>;
+}</code></pre></body></html>

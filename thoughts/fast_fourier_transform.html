@@ -1,121 +1,157 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>RNC &mdash; Writing</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
-	<link rel="manifest" href="../site.webmanifest">
-    </head>
-    <body>
-	<h3>Fast Fourier Transform Example</h3>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>RNC — Writing</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png"><link rel="manifest" href="../site.webmanifest"><style>/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
 
-	<p>I provide a simple example code to compute the Fast Fourier Transform (FFT) of a
-	sequence of length 2<sup>n</sup> where n is an integer. The implementation
-	only computes the forward transform, discretized in time. The routine does not
-	precompute the twiddle factors (aka the roots of unity). </p>
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
 
-        <p>This is a discretization in time (DIT) implementation of the FFT.
-        You can also discretize in frequency (DIF). One would have to slightly
-        modify the internals of the <code>fast_fourier_transform</code> function, but the
-        changes would be minor.</p>
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
 
-	<p>If the inverse transform is desired, you can compute it using the forward
-	transform multiple different ways. I prefer to conjugate the series, next
-        forward transform, and finally conjugate the resulting series. Then I can apply
-        whatever normalization I desire. But if this is too complicated, you can always
-        copy and paste the code below, change the function name to <code>inverse_fast_fourier_transform</code>
-        (whatever you prefer) and finally swap the sign of the <code>angle</code> variable.
-        Then that will be an unnormalized inverse FFT.</p>
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
 
-	<hr>
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
 
-        <code>
-        /*&nbsp;Fast&nbsp;Fourier&nbsp;Transform&nbsp;(FFT)&nbsp;*/<br>
-        #include&nbsp;&lt;math.h&gt;<br>
-        #include&nbsp;&lt;stddef.h&gt;<br>
-        #include&nbsp;&lt;stdint.h&gt;<br>
-        <br>
-        typedef&nbsp;struct&nbsp;complex_double&nbsp;{<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;double&nbsp;real;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;double&nbsp;imag;<br>
-        }&nbsp;complex_double;<br>
-        <br>
-        void&nbsp;complex_add_inplace(complex_double&nbsp;*a,&nbsp;complex_double&nbsp;b)&nbsp;{<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;a-&gt;real&nbsp;+=&nbsp;b.real;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;a-&gt;imag&nbsp;+=&nbsp;b.imag;<br>
-        }<br>
-        <br>
-        complex_double&nbsp;complex_sub(complex_double&nbsp;a,&nbsp;complex_double&nbsp;b)&nbsp;{<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(complex_double){a.real&nbsp;-&nbsp;b.real,&nbsp;a.imag&nbsp;-&nbsp;b.imag};<br>
-        }<br>
-        <br>
-        complex_double&nbsp;complex_mul(complex_double&nbsp;a,&nbsp;complex_double&nbsp;b)&nbsp;{<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(complex_double){a.real&nbsp;*&nbsp;b.real&nbsp;-&nbsp;a.imag&nbsp;*&nbsp;b.imag,&nbsp;a.imag&nbsp;*&nbsp;b.real&nbsp;+&nbsp;a.real&nbsp;*&nbsp;b.imag};<br>
-        }<br>
-        <br>
-        void&nbsp;complex_swap(complex_double&nbsp;*a,&nbsp;complex_double&nbsp;*b)&nbsp;{<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;uint64_t&nbsp;*ar&nbsp;=&nbsp;(uint64_t&nbsp;*)&amp;a-&gt;real;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;uint64_t&nbsp;*ai&nbsp;=&nbsp;(uint64_t&nbsp;*)&amp;a-&gt;imag;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;uint64_t&nbsp;*br&nbsp;=&nbsp;(uint64_t&nbsp;*)&amp;b-&gt;real;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;uint64_t&nbsp;*bi&nbsp;=&nbsp;(uint64_t&nbsp;*)&amp;b-&gt;imag;<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Because&nbsp;XOR&nbsp;operates&nbsp;bit-wise,&nbsp;I&nbsp;can&nbsp;independantly&nbsp;swap&nbsp;the&nbsp;real&nbsp;and<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;imaginary&nbsp;components&nbsp;of&nbsp;a&nbsp;and&nbsp;b&nbsp;separately.&nbsp;*/<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;*br&nbsp;^=&nbsp;*ar;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;*ar&nbsp;^=&nbsp;*br;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;*br&nbsp;^=&nbsp;*ar;<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;*bi&nbsp;^=&nbsp;*ai;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;*ai&nbsp;^=&nbsp;*bi;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;*bi&nbsp;^=&nbsp;*ai;<br>
-        }<br>
-        <br>
-        /*&nbsp;Fast&nbsp;fourier&nbsp;transform,&nbsp;decimated-in-time&nbsp;(DIT)&nbsp;*/<br>
-        void&nbsp;fast_fourier_transform(complex_double&nbsp;*data,&nbsp;size_t&nbsp;n_samples,&nbsp;size_t&nbsp;stride)&nbsp;{<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Bit-wise&nbsp;reversal&nbsp;*/<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;size_t&nbsp;position,&nbsp;target&nbsp;=&nbsp;0,&nbsp;half_samples&nbsp;=&nbsp;n_samples&nbsp;&gt;&gt;&nbsp;1;<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(position&nbsp;=&nbsp;0;&nbsp;position&nbsp;&lt;&nbsp;n_samples;&nbsp;position++)&nbsp;{<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(target&nbsp;&gt;&nbsp;position)&nbsp;{<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size_t&nbsp;ip&nbsp;=&nbsp;position&nbsp;*&nbsp;stride,&nbsp;it&nbsp;=&nbsp;target&nbsp;*&nbsp;stride;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;complex_swap(data&nbsp;+&nbsp;ip,&nbsp;data&nbsp;+&nbsp;it);<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size_t&nbsp;mask&nbsp;=&nbsp;half_samples;<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(target&nbsp;&amp;&nbsp;mask)&nbsp;{<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;target&nbsp;&amp;=&nbsp;~mask;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mask&nbsp;&gt;&gt;=&nbsp;1;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;target&nbsp;|=&nbsp;mask;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Butterfly&nbsp;loops&nbsp;*/<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(size_t&nbsp;span&nbsp;=&nbsp;1;&nbsp;span&nbsp;&lt;&nbsp;n_samples;&nbsp;span&nbsp;&lt;&lt;=&nbsp;1)&nbsp;{<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size_t&nbsp;group_step&nbsp;=&nbsp;span&nbsp;&lt;&lt;&nbsp;1;<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(size_t&nbsp;wing_idx&nbsp;=&nbsp;0;&nbsp;wing_idx&nbsp;&lt;&nbsp;span;&nbsp;wing_idx++)&nbsp;{<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Twiddle&nbsp;factors&nbsp;are&nbsp;the&nbsp;roots&nbsp;of&nbsp;unity.&nbsp;They&nbsp;could&nbsp;be&nbsp;precomputed&nbsp;for&nbsp;speed,&nbsp;but&nbsp;that<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;requires&nbsp;memory&nbsp;management,&nbsp;so&nbsp;I&nbsp;do&nbsp;not&nbsp;want&nbsp;to&nbsp;deal&nbsp;with&nbsp;it&nbsp;now.&nbsp;*/<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double&nbsp;angle&nbsp;=&nbsp;-M_PI&nbsp;*&nbsp;wing_idx&nbsp;/&nbsp;span;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;complex_double&nbsp;twiddle&nbsp;=&nbsp;{cos(angle),&nbsp;sin(angle)};<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(size_t&nbsp;node&nbsp;=&nbsp;wing_idx;&nbsp;node&nbsp;&lt;&nbsp;n_samples;&nbsp;node&nbsp;+=&nbsp;group_step)&nbsp;{<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size_t&nbsp;upper_idx&nbsp;=&nbsp;node&nbsp;*&nbsp;stride,&nbsp;lower_idx&nbsp;=&nbsp;(node&nbsp;+&nbsp;span)&nbsp;*&nbsp;stride;<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;This&nbsp;the&nbsp;the&nbsp;butterfly&nbsp;step.&nbsp;There&nbsp;is&nbsp;only&nbsp;one&nbsp;complex<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;multiplication&nbsp;to&nbsp;compute&nbsp;two&nbsp;new&nbsp;values.&nbsp;*/<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;complex_double&nbsp;product&nbsp;=&nbsp;complex_mul(twiddle,&nbsp;data[lower_idx]);<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[lower_idx]&nbsp;=&nbsp;complex_sub(data[upper_idx],&nbsp;product);<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;complex_add_inplace(data&nbsp;+&nbsp;upper_idx,&nbsp;product);<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-        }<br>
-        </code>
-    </body>
-</html>
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}</style></head><body><h3>Fast Fourier Transform Example</h3><p>I provide a simple example code to compute the Fast Fourier Transform (FFT) of a sequence of length <math><msup><mn>2</mn><mi>𝑛</mi></msup></math> where <math><mi>𝑛</mi></math> is an integer. The implementation only computes the forward transform, discretized in time. The routine does not precompute the twiddle factors (aka the roots of unity).</p><p>This is a discretization in time (DIT) implementation of the FFT. You can also discretize in frequency (DIF). One would have to slightly modify the internals of the <code>fast_fourier_transform</code> function, but the changes would be minor.</p><p>If the inverse transform is desired, you can compute it using the forward transform multiple different ways. I prefer to conjugate the series, next forward transform, and finally conjugate the resulting series. Then I can apply whatever normalization I desire. But if this is too complicated, you can always copy and paste the code below, change the function name to <code>inverse_fast_fourier_transform</code> (whatever you prefer) and finally swap the sign of the <code>angle</code> variable. Then that will be an unnormalized inverse FFT.</p><hr><pre><code data-lang="c"><span style="color: #74747c">/*</span><span style="color: #74747c"> Fast Fourier Transform (FFT) </span><span style="color: #74747c">*/</span>
+<span style="color: #d73948">#include</span> <span style="color: #198810">&lt;</span><span style="color: #198810">math.h</span><span style="color: #198810">></span>
+<span style="color: #d73948">#include</span> <span style="color: #198810">&lt;</span><span style="color: #198810">stddef.h</span><span style="color: #198810">></span>
+<span style="color: #d73948">#include</span> <span style="color: #198810">&lt;</span><span style="color: #198810">stdint.h</span><span style="color: #198810">></span>
+
+<span style="color: #d73948">typedef</span> <span style="color: #d73948">struct</span> complex_double {
+    <span style="color: #d73948">double</span> real;
+    <span style="color: #d73948">double</span> imag;
+} <span style="color: #4b69c6">complex_double</span>;
+
+<span style="color: #d73948">void</span> <span style="color: #4b69c6">complex_add_inplace</span>(complex_double <span style="color: #d73948">*</span>a, complex_double b) {
+    a->real <span style="color: #d73948">+=</span> b.real;
+    a->imag <span style="color: #d73948">+=</span> b.imag;
+}
+
+complex_double <span style="color: #4b69c6">complex_sub</span>(complex_double a, complex_double b) {
+    <span style="color: #d73948">return</span> (complex_double){a.real <span style="color: #d73948">-</span> b.real, a.imag <span style="color: #d73948">-</span> b.imag};
+}
+
+complex_double <span style="color: #4b69c6">complex_mul</span>(complex_double a, complex_double b) {
+    <span style="color: #d73948">return</span> (complex_double){a.real <span style="color: #d73948">*</span> b.real <span style="color: #d73948">-</span> a.imag <span style="color: #d73948">*</span> b.imag, a.imag <span style="color: #d73948">*</span> b.real <span style="color: #d73948">+</span> a.real <span style="color: #d73948">*</span> b.imag};
+}
+
+<span style="color: #d73948">void</span> <span style="color: #4b69c6">complex_swap</span>(complex_double <span style="color: #d73948">*</span>a, complex_double <span style="color: #d73948">*</span>b) {
+    <span style="color: #4b69c6">uint64_t</span> <span style="color: #d73948">*</span>ar <span style="color: #d73948">=</span> (<span style="color: #4b69c6">uint64_t</span> <span style="color: #d73948">*</span>)<span style="color: #d73948">&amp;</span>a->real;
+    <span style="color: #4b69c6">uint64_t</span> <span style="color: #d73948">*</span>ai <span style="color: #d73948">=</span> (<span style="color: #4b69c6">uint64_t</span> <span style="color: #d73948">*</span>)<span style="color: #d73948">&amp;</span>a->imag;
+    <span style="color: #4b69c6">uint64_t</span> <span style="color: #d73948">*</span>br <span style="color: #d73948">=</span> (<span style="color: #4b69c6">uint64_t</span> <span style="color: #d73948">*</span>)<span style="color: #d73948">&amp;</span>b->real;
+    <span style="color: #4b69c6">uint64_t</span> <span style="color: #d73948">*</span>bi <span style="color: #d73948">=</span> (<span style="color: #4b69c6">uint64_t</span> <span style="color: #d73948">*</span>)<span style="color: #d73948">&amp;</span>b->imag;
+
+    <span style="color: #74747c">/*</span><span style="color: #74747c"> Because XOR operates bit-wise, I can independantly swap the real and</span>
+<span style="color: #74747c">     </span><span style="color: #74747c">*</span><span style="color: #74747c"> imaginary components of a and b separately. </span><span style="color: #74747c">*/</span>
+    <span style="color: #d73948">*</span>br <span style="color: #d73948">^=</span> <span style="color: #d73948">*</span>ar;
+    <span style="color: #d73948">*</span>ar <span style="color: #d73948">^=</span> <span style="color: #d73948">*</span>br;
+    <span style="color: #d73948">*</span>br <span style="color: #d73948">^=</span> <span style="color: #d73948">*</span>ar;
+
+    <span style="color: #d73948">*</span>bi <span style="color: #d73948">^=</span> <span style="color: #d73948">*</span>ai;
+    <span style="color: #d73948">*</span>ai <span style="color: #d73948">^=</span> <span style="color: #d73948">*</span>bi;
+    <span style="color: #d73948">*</span>bi <span style="color: #d73948">^=</span> <span style="color: #d73948">*</span>ai;
+}
+
+<span style="color: #74747c">/*</span><span style="color: #74747c"> Fast fourier transform, decimated-in-time (DIT) </span><span style="color: #74747c">*/</span>
+<span style="color: #d73948">void</span> <span style="color: #4b69c6">fast_fourier_transform</span>(complex_double <span style="color: #d73948">*</span>data, <span style="color: #4b69c6">size_t</span> n_samples, <span style="color: #4b69c6">size_t</span> stride) {
+    <span style="color: #74747c">/*</span><span style="color: #74747c"> Bit-wise reversal </span><span style="color: #74747c">*/</span>
+    <span style="color: #4b69c6">size_t</span> position, target <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>, half_samples <span style="color: #d73948">=</span> n_samples <span style="color: #d73948">>></span> <span style="color: #b60157">1</span>;
+
+    <span style="color: #d73948">for</span> (position <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>; position <span style="color: #d73948">&lt;</span> n_samples; position<span style="color: #d73948">++</span>) {
+        <span style="color: #d73948">if</span> (target <span style="color: #d73948">></span> position) {
+            <span style="color: #4b69c6">size_t</span> ip <span style="color: #d73948">=</span> position <span style="color: #d73948">*</span> stride, it <span style="color: #d73948">=</span> target <span style="color: #d73948">*</span> stride;
+            <span style="color: #4b69c6">complex_swap</span>(data <span style="color: #d73948">+</span> ip, data <span style="color: #d73948">+</span> it);
+        }
+
+        <span style="color: #4b69c6">size_t</span> mask <span style="color: #d73948">=</span> half_samples;
+
+        <span style="color: #d73948">while</span> (target <span style="color: #d73948">&amp;</span> mask) {
+            target <span style="color: #d73948">&amp;=</span> <span style="color: #d73948">~</span>mask;
+            mask <span style="color: #d73948">>>=</span> <span style="color: #b60157">1</span>;
+        }
+        target <span style="color: #d73948">|=</span> mask;
+    }
+
+    <span style="color: #74747c">/*</span><span style="color: #74747c"> Butterfly loops </span><span style="color: #74747c">*/</span>
+    <span style="color: #d73948">for</span> (<span style="color: #4b69c6">size_t</span> span <span style="color: #d73948">=</span> <span style="color: #b60157">1</span>; span <span style="color: #d73948">&lt;</span> n_samples; span <span style="color: #d73948">&lt;&lt;=</span> <span style="color: #b60157">1</span>) {
+        <span style="color: #4b69c6">size_t</span> group_step <span style="color: #d73948">=</span> span <span style="color: #d73948">&lt;&lt;</span> <span style="color: #b60157">1</span>;
+
+        <span style="color: #d73948">for</span> (<span style="color: #4b69c6">size_t</span> wing_idx <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>; wing_idx <span style="color: #d73948">&lt;</span> span; wing_idx<span style="color: #d73948">++</span>) {
+
+            <span style="color: #74747c">/*</span><span style="color: #74747c"> Twiddle factors are the roots of unity. They could be precomputed for speed, but that</span>
+<span style="color: #74747c">             </span><span style="color: #74747c">*</span><span style="color: #74747c"> requires memory management, so I do not want to deal with it now. </span><span style="color: #74747c">*/</span>
+            <span style="color: #d73948">double</span> angle <span style="color: #d73948">=</span> <span style="color: #d73948">-</span>M_PI <span style="color: #d73948">*</span> wing_idx <span style="color: #d73948">/</span> span;
+            complex_double twiddle <span style="color: #d73948">=</span> {<span style="color: #4b69c6">cos</span>(angle), <span style="color: #4b69c6">sin</span>(angle)};
+
+            <span style="color: #d73948">for</span> (<span style="color: #4b69c6">size_t</span> node <span style="color: #d73948">=</span> wing_idx; node <span style="color: #d73948">&lt;</span> n_samples; node <span style="color: #d73948">+=</span> group_step) {
+                <span style="color: #4b69c6">size_t</span> upper_idx <span style="color: #d73948">=</span> node <span style="color: #d73948">*</span> stride, lower_idx <span style="color: #d73948">=</span> (node <span style="color: #d73948">+</span> span) <span style="color: #d73948">*</span> stride;
+
+                <span style="color: #74747c">/*</span><span style="color: #74747c"> This the the butterfly step. There is only one complex</span>
+<span style="color: #74747c">                 </span><span style="color: #74747c">*</span><span style="color: #74747c"> multiplication to compute two new values. </span><span style="color: #74747c">*/</span>
+                complex_double product <span style="color: #d73948">=</span> <span style="color: #4b69c6">complex_mul</span>(twiddle, data[lower_idx]);
+                data[lower_idx] <span style="color: #d73948">=</span> <span style="color: #4b69c6">complex_sub</span>(data[upper_idx], product);
+                <span style="color: #4b69c6">complex_add_inplace</span>(data <span style="color: #d73948">+</span> upper_idx, product);
+            }
+        }
+    }
+}</code></pre></body></html>

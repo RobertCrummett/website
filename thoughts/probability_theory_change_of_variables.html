@@ -1,170 +1,190 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>RNC &mdash; Writing</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
-	<link rel="manifest" href="../site.webmanifest">
-    </head>
-    <body>
-	<h3>Probability Theory &mdash; A Random Thought Regarding Change of Variables</h3>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>RNC — Writing</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png"><link rel="manifest" href="../site.webmanifest"><style>/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
 
-	<p>The change of variables formulas enable one to derive the probability distribution
-	of a random variable transformed by a continuous monotonic function. Or sections of
-	a function that is continuous and monotonic piecewise. This can be done to distributions
-	of random vectors as well as distributions of random variables &mdash; the rules do
-	not change majorly.</p>
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
 
-	<p>Using change of variables in the real world is usually tedious, so it usually gets
-	a bad reputation as a result. It is almost never elegant. The deteminant of the inverse
-	Jacobian has an interesting geometrical interpretation, but to be frank, the interesting
-	quality wears thin quickly. Thus my thoughts of this technique for manipulating
-	probability density functions were not so very high in the past.</p>
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
 
-	<p>But my opinion of this technique has recently flipped upside-down. The change of
-	variables formula is extremely practical from an engineering standpoint because it
-	enables on to transform simple probability distributions into very complicated
-	distributions with minimal dependencies.</p>
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
 
-	<p>Take for instance the uniform distribution. One may implement this distribution
-	with the <a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> algorithm,
-	or maybe a <a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift</a>, or maybe even something
-	else. The algorithm is really not of consequence to this discussion. By only implementing one
-	pseudo-random number generator, an engineer can create normal distributions, log-normal distributions,
-	exponential distributions, you name it. Just transform the uniform random variable appropriately.</p>
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
 
-	<p>The change of variables formula allow the average engineer to remove dependencies in
-	their projects. This eliminates surface area for bugs to creep in, complex APIs from
-	stalling development and maintenance, and a place to focus energy for optimization purposes.
-	And to top it all off, application of these formulas usually requires nothing more than standard
-	vector calculus!</p>
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}</style></head><body><h3>Probability Theory — A Random Thought Regarding Change of Variables</h3><p>The change of variables formulas enable one to derive the probability distribution of a random variable transformed by a continuous monotonic function. Or sections of a function that is continuous and monotonic piecewise. This can be done to distributions of random vectors as well as distributions of random variables — the rules do not change majorly.</p><p>Using change of variables in the real world is usually tedious, so it usually gets a bad reputation as a result. It is almost never elegant. The deteminant of the inverse Jacobian has an interesting geometrical interpretation, but to be frank, the interesting quality wears thin quickly. Thus my thoughts of this technique for manipulating probability density functions were not so very high in the past.</p><p>But my opinion of this technique has recently flipped upside-down. The change of variables formula is extremely practical from an engineering standpoint because it enables on to transform simple probability distributions into very complicated distributions with minimal dependencies.</p><p>Take for instance the uniform distribution. One may implement this distribution with the <a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> algorithm, or maybe a <a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift</a>, or maybe even something else. The algorithm is really not of consequence to this discussion. By only implementing one pseudo-random number generator, an engineer can create normal distributions, log-normal distributions, exponential distributions, you name it. Just transform the uniform random variable appropriately.</p><p>The change of variables formula allow the average engineer to remove dependencies in their projects. This eliminates surface area for bugs to creep in, complex APIs from stalling development and maintenance, and a place to focus energy for optimization purposes. And to top it all off, application of these formulas usually requires nothing more than standard vector calculus!</p><p>For all these reasons, I am beginning to appreciate the change of variables formulas more.</p><hr><p>Example of the Box-Muller transform.</p><pre><code data-lang="c"><span style="color: #74747c">/*</span><span style="color: #74747c"> Example of the Box-Muller transform </span><span style="color: #74747c">*/</span>
+<span style="color: #d73948">#include</span> <span style="color: #198810">&lt;</span><span style="color: #198810">stdio.h</span><span style="color: #198810">></span>
+<span style="color: #d73948">#include</span> <span style="color: #198810">&lt;</span><span style="color: #198810">stdint.h</span><span style="color: #198810">></span>
+<span style="color: #d73948">#include</span> <span style="color: #198810">&lt;</span><span style="color: #198810">math.h</span><span style="color: #198810">></span>
 
-	<p>For all these reasons, I am beginning to appreciate the change of variables formulas more.</p>
+<span style="color: #74747c">/*</span><span style="color: #74747c"> Mersenne-Twister 64-bit pseudo-random number generator </span><span style="color: #74747c">*/</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">W</span> <span style="color: #b60157">64</span><span style="color: #d73948">ULL</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">N</span> <span style="color: #b60157">312</span><span style="color: #d73948">ULL</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">M</span> <span style="color: #b60157">156</span><span style="color: #d73948">ULL</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">R</span> <span style="color: #b60157">31</span><span style="color: #d73948">ULL</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">A</span> <span style="color: #b60157">0x</span><span style="color: #b60157">B5026F5AA96619E9</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">U</span> <span style="color: #b60157">29</span><span style="color: #d73948">ULL</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">D</span> <span style="color: #b60157">0x</span><span style="color: #b60157">5555555555555555</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">S</span> <span style="color: #b60157">29</span><span style="color: #d73948">ULL</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">B</span> <span style="color: #b60157">0x</span><span style="color: #b60157">71D67FFFEDA60000</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">T</span> <span style="color: #b60157">37</span><span style="color: #d73948">ULL</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">C</span> <span style="color: #b60157">0x</span><span style="color: #b60157">FFF7EEE000000000</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">L</span> <span style="color: #b60157">43</span><span style="color: #d73948">ULL</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">F</span> <span style="color: #b60157">6364136223846793005</span><span style="color: #d73948">ULL</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">UMASK</span> (<span style="color: #b60157">0x</span><span style="color: #b60157">FFFFFFFFFFFFFFFF</span> <span style="color: #d73948">&lt;&lt;</span> (R))
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">LMASK</span> (<span style="color: #b60157">0x</span><span style="color: #b60157">FFFFFFFFFFFFFFFF</span> <span style="color: #d73948">>></span> ((W)<span style="color: #d73948">-</span>(R)))
 
-	<hr>
+<span style="color: #d73948">static</span> <span style="color: #4b69c6">uint64_t</span> state[N] <span style="color: #d73948">=</span> {<span style="color: #b60157">0</span>};
+<span style="color: #d73948">static</span> <span style="color: #d73948">int</span> index <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>;
 
-	<p>Example of the Box-Muller transform.</p>
+<span style="color: #d73948">void</span> <span style="color: #4b69c6">seed_mt64_rand</span>(<span style="color: #4b69c6">uint64_t</span> seed) {
+    state[<span style="color: #b60157">0</span>] <span style="color: #d73948">=</span> seed;
+    <span style="color: #d73948">for</span> (<span style="color: #4b69c6">uint64_t</span> i <span style="color: #d73948">=</span> <span style="color: #b60157">1</span>; i <span style="color: #d73948">&lt;</span> N; i<span style="color: #d73948">++</span>) {
+    seed <span style="color: #d73948">=</span> F <span style="color: #d73948">*</span> (seed <span style="color: #d73948">^</span> (seed <span style="color: #d73948">>></span> (W <span style="color: #d73948">-</span> <span style="color: #b60157">2</span>))) <span style="color: #d73948">+</span> i;
+    state[i] <span style="color: #d73948">=</span> seed;
+    }
+    index <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>;
+}
 
-	<code>
-	    /*&nbsp;Example&nbsp;of&nbsp;the&nbsp;Box-Muller&nbsp;transform&nbsp;*/<br>
-	    #include&nbsp;&lt;stdio.h&gt;<br>
-	    #include&nbsp;&lt;stdint.h&gt;<br>
-	    #include&nbsp;&lt;math.h&gt;<br>
-	    <br>
-	    /*&nbsp;Mersenne-Twister&nbsp;64-bit&nbsp;pseudo-random&nbsp;number&nbsp;generator&nbsp;*/<br>
-	    #define&nbsp;W&nbsp;64ULL<br>
-	    #define&nbsp;N&nbsp;312ULL<br>
-	    #define&nbsp;M&nbsp;156ULL<br>
-	    #define&nbsp;R&nbsp;31ULL<br>
-	    #define&nbsp;A&nbsp;0xB5026F5AA96619E9<br>
-	    #define&nbsp;U&nbsp;29ULL<br>
-	    #define&nbsp;D&nbsp;0x5555555555555555<br>
-	    #define&nbsp;S&nbsp;29ULL<br>
-	    #define&nbsp;B&nbsp;0x71D67FFFEDA60000<br>
-	    #define&nbsp;T&nbsp;37ULL<br>
-	    #define&nbsp;C&nbsp;0xFFF7EEE000000000<br>
-	    #define&nbsp;L&nbsp;43ULL<br>
-	    #define&nbsp;F&nbsp;6364136223846793005ULL<br>
-	    #define&nbsp;UMASK&nbsp;(0xFFFFFFFFFFFFFFFF&nbsp;&lt;&lt;&nbsp;(R))<br>
-	    #define&nbsp;LMASK&nbsp;(0xFFFFFFFFFFFFFFFF&nbsp;&gt;&gt;&nbsp;((W)-(R)))<br>
-	    <br>
-	    static&nbsp;uint64_t&nbsp;state[N]&nbsp;=&nbsp;{0};<br>
-	    static&nbsp;int&nbsp;index&nbsp;=&nbsp;0;<br>
-	    <br>
-	    void&nbsp;seed_mt64_rand(uint64_t&nbsp;seed)&nbsp;{<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;state[0]&nbsp;=&nbsp;seed;<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(uint64_t&nbsp;i&nbsp;=&nbsp;1;&nbsp;i&nbsp;&lt;&nbsp;N;&nbsp;i++)&nbsp;{<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;seed&nbsp;=&nbsp;F&nbsp;*&nbsp;(seed&nbsp;^&nbsp;(seed&nbsp;&gt;&gt;&nbsp;(W&nbsp;-&nbsp;2)))&nbsp;+&nbsp;i;<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;state[i]&nbsp;=&nbsp;seed;<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;=&nbsp;0;<br>
-	    }<br>
-	    <br>
-	    uint64_t&nbsp;mt64_rand(void)&nbsp;{<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;k&nbsp;=&nbsp;index;<br>
-	    <br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;j&nbsp;=&nbsp;k&nbsp;-&nbsp;(N&nbsp;-&nbsp;1);<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(j&nbsp;&lt;&nbsp;0)&nbsp;j&nbsp;+=&nbsp;N;<br>
-	    <br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;uint64_t&nbsp;x&nbsp;=&nbsp;(state[k]&nbsp;&amp;&nbsp;UMASK)&nbsp;|&nbsp;(state[j]&nbsp;&amp;&nbsp;LMASK);<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;uint64_t&nbsp;xA&nbsp;=&nbsp;x&nbsp;&gt;&gt;&nbsp;1;<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(x&nbsp;&amp;&nbsp;1)&nbsp;xA&nbsp;^=&nbsp;A;<br>
-	    <br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;j&nbsp;=&nbsp;k&nbsp;-&nbsp;(N&nbsp;-&nbsp;M);<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(j&nbsp;&lt;&nbsp;0)&nbsp;j&nbsp;+=&nbsp;N;<br>
-	    <br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;=&nbsp;state[j]&nbsp;^&nbsp;xA;<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;state[k++]&nbsp;=&nbsp;x;<br>
-	    <br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(k&nbsp;&gt;=&nbsp;N)&nbsp;k&nbsp;=&nbsp;0;<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;=&nbsp;k;<br>
-	    <br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;^=&nbsp;x&nbsp;&gt;&gt;&nbsp;U;<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;^=&nbsp;(x&nbsp;&lt;&lt;&nbsp;S)&nbsp;&amp;&nbsp;B;<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;^=&nbsp;(x&nbsp;&lt;&lt;&nbsp;T)&nbsp;&amp;&nbsp;C;<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;^=&nbsp;x&nbsp;&gt;&gt;&nbsp;L;<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;x;<br>
-	    }<br>
-	    <br>
-	    #undef&nbsp;W<br>
-	    #undef&nbsp;N<br>
-	    #undef&nbsp;M<br>
-	    #undef&nbsp;R<br>
-	    #undef&nbsp;A<br>
-	    #undef&nbsp;U<br>
-	    #undef&nbsp;D<br>
-	    #undef&nbsp;S<br>
-	    #undef&nbsp;B<br>
-	    #undef&nbsp;T<br>
-	    #undef&nbsp;C<br>
-	    #undef&nbsp;L<br>
-	    #undef&nbsp;F<br>
-	    #undef&nbsp;UMASK<br>
-	    #undef&nbsp;LMASK<br>
-	    <br>
-	    /*&nbsp;Uniform&nbsp;distribution&nbsp;on&nbsp;interval&nbsp;[0.0,&nbsp;1.0)&nbsp;*/<br>
-	    double&nbsp;uniform(void)&nbsp;{<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(double)(mt64_rand()&nbsp;&gt;&gt;&nbsp;11)&nbsp;/&nbsp;(1ULL&nbsp;&lt;&lt;&nbsp;53);<br>
-	    }<br>
-	    <br>
-	    /*&nbsp;Exponential&nbsp;distribution&nbsp;parameterized&nbsp;by&nbsp;lambda&nbsp;*/<br>
-	    double&nbsp;exponential(double&nbsp;lambda)&nbsp;{<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;-1.0&nbsp;/&nbsp;lambda&nbsp;*&nbsp;log(uniform());<br>
-	    }<br>
-	    <br>
-	    /*&nbsp;Standard&nbsp;normal&nbsp;distribution&nbsp;*/<br>
-	    static&nbsp;double&nbsp;saved_normal_realization&nbsp;=&nbsp;0;<br>
-	    static&nbsp;int&nbsp;box_muller_transform_needs_to_be_computed&nbsp;=&nbsp;1;<br>
-	    double&nbsp;normal(void)&nbsp;{<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(box_muller_transform_needs_to_be_computed)&nbsp;{<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;box_muller_transform_needs_to_be_computed&nbsp;=&nbsp;0;<br>
-	    <br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;double&nbsp;r&nbsp;=&nbsp;exponential(0.5);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Distribution&nbsp;of&nbsp;radius&nbsp;*/<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;double&nbsp;t&nbsp;=&nbsp;uniform()&nbsp;*&nbsp;6.283185307179586;&nbsp;/*&nbsp;Distribution&nbsp;of&nbsp;angles&nbsp;*/<br>
-	    <br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;double&nbsp;s&nbsp;=&nbsp;sqrt(r);<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;saved_normal_realization&nbsp;=&nbsp;s&nbsp;*&nbsp;sin(t);<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;s&nbsp;*&nbsp;cos(t);<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;box_muller_transform_needs_to_be_computed&nbsp;=&nbsp;1;<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;saved_normal_realization;<br>
-	    }&nbsp;<br>
-	    <br>
-	    /*&nbsp;Generate&nbsp;'SAMPLES'&nbsp;number&nbsp;of&nbsp;standard&nbsp;normal&nbsp;random&nbsp;variable&nbsp;realizations&nbsp;*/<br>
-	    #define&nbsp;SAMPLES&nbsp;10000<br>
-	    int&nbsp;main(void)&nbsp;{<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;uint64_t&nbsp;seed&nbsp;=&nbsp;12345;<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;seed_mt64_rand(seed);<br>
-	    <br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(int&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;samples;&nbsp;i++)&nbsp;{<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;printf("%lf\n",&nbsp;normal());<br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-	    <br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;0;<br>
-	    }<br>
-	</code>
-    </body>
-</html>
+<span style="color: #4b69c6">uint64_t</span> <span style="color: #4b69c6">mt64_rand</span>(<span style="color: #d73948">void</span>) {
+    <span style="color: #d73948">int</span> k <span style="color: #d73948">=</span> index;
+
+    <span style="color: #d73948">int</span> j <span style="color: #d73948">=</span> k <span style="color: #d73948">-</span> (N <span style="color: #d73948">-</span> <span style="color: #b60157">1</span>);
+    <span style="color: #d73948">if</span> (j <span style="color: #d73948">&lt;</span> <span style="color: #b60157">0</span>) j <span style="color: #d73948">+=</span> N;
+
+    <span style="color: #4b69c6">uint64_t</span> x <span style="color: #d73948">=</span> (state[k] <span style="color: #d73948">&amp;</span> UMASK) <span style="color: #d73948">|</span> (state[j] <span style="color: #d73948">&amp;</span> LMASK);
+    <span style="color: #4b69c6">uint64_t</span> xA <span style="color: #d73948">=</span> x <span style="color: #d73948">>></span> <span style="color: #b60157">1</span>;
+    <span style="color: #d73948">if</span> (x <span style="color: #d73948">&amp;</span> <span style="color: #b60157">1</span>) xA <span style="color: #d73948">^=</span> A;
+
+    j <span style="color: #d73948">=</span> k <span style="color: #d73948">-</span> (N <span style="color: #d73948">-</span> M);
+    <span style="color: #d73948">if</span> (j <span style="color: #d73948">&lt;</span> <span style="color: #b60157">0</span>) j <span style="color: #d73948">+=</span> N;
+
+    x <span style="color: #d73948">=</span> state[j] <span style="color: #d73948">^</span> xA;
+    state[k<span style="color: #d73948">++</span>] <span style="color: #d73948">=</span> x;
+
+    <span style="color: #d73948">if</span> (k <span style="color: #d73948">>=</span> N) k <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>;
+    index <span style="color: #d73948">=</span> k;
+
+    x <span style="color: #d73948">^=</span> x <span style="color: #d73948">>></span> U;
+    x <span style="color: #d73948">^=</span> (x <span style="color: #d73948">&lt;&lt;</span> S) <span style="color: #d73948">&amp;</span> B;
+    x <span style="color: #d73948">^=</span> (x <span style="color: #d73948">&lt;&lt;</span> T) <span style="color: #d73948">&amp;</span> C;
+    x <span style="color: #d73948">^=</span> x <span style="color: #d73948">>></span> L;
+    <span style="color: #d73948">return</span> x;
+}
+
+<span style="color: #d73948">#undef</span> W
+<span style="color: #d73948">#undef</span> N
+<span style="color: #d73948">#undef</span> M
+<span style="color: #d73948">#undef</span> R
+<span style="color: #d73948">#undef</span> A
+<span style="color: #d73948">#undef</span> U
+<span style="color: #d73948">#undef</span> D
+<span style="color: #d73948">#undef</span> S
+<span style="color: #d73948">#undef</span> B
+<span style="color: #d73948">#undef</span> T
+<span style="color: #d73948">#undef</span> C
+<span style="color: #d73948">#undef</span> L
+<span style="color: #d73948">#undef</span> F
+<span style="color: #d73948">#undef</span> UMASK
+<span style="color: #d73948">#undef</span> LMASK
+
+<span style="color: #74747c">/*</span><span style="color: #74747c"> Uniform distribution on interval [0.0, 1.0) </span><span style="color: #74747c">*/</span>
+<span style="color: #d73948">double</span> <span style="color: #4b69c6">uniform</span>(<span style="color: #d73948">void</span>) {
+    <span style="color: #d73948">return</span> (<span style="color: #d73948">double</span>)(<span style="color: #4b69c6">mt64_rand</span>() <span style="color: #d73948">>></span> <span style="color: #b60157">11</span>) <span style="color: #d73948">/</span> (<span style="color: #b60157">1</span><span style="color: #d73948">ULL</span> <span style="color: #d73948">&lt;&lt;</span> <span style="color: #b60157">53</span>);
+}
+
+<span style="color: #74747c">/*</span><span style="color: #74747c"> Exponential distribution parameterized by lambda </span><span style="color: #74747c">*/</span>
+<span style="color: #d73948">double</span> <span style="color: #4b69c6">exponential</span>(<span style="color: #d73948">double</span> lambda) {
+    <span style="color: #d73948">return</span> <span style="color: #d73948">-</span><span style="color: #b60157">1</span><span style="color: #b60157">.</span><span style="color: #b60157">0</span> <span style="color: #d73948">/</span> lambda <span style="color: #d73948">*</span> <span style="color: #4b69c6">log</span>(<span style="color: #4b69c6">uniform</span>());
+}
+
+<span style="color: #74747c">/*</span><span style="color: #74747c"> Standard normal distribution </span><span style="color: #74747c">*/</span>
+<span style="color: #d73948">static</span> <span style="color: #d73948">double</span> saved_normal_realization <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>;
+<span style="color: #d73948">static</span> <span style="color: #d73948">int</span> box_muller_transform_needs_to_be_computed <span style="color: #d73948">=</span> <span style="color: #b60157">1</span>;
+<span style="color: #d73948">double</span> <span style="color: #4b69c6">normal</span>(<span style="color: #d73948">void</span>) {
+    <span style="color: #d73948">if</span> (box_muller_transform_needs_to_be_computed) {
+    box_muller_transform_needs_to_be_computed <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>;
+
+    <span style="color: #d73948">double</span> r <span style="color: #d73948">=</span> <span style="color: #4b69c6">exponential</span>(<span style="color: #b60157">0</span><span style="color: #b60157">.</span><span style="color: #b60157">5</span>);              <span style="color: #74747c">/*</span><span style="color: #74747c"> Distribution of radius </span><span style="color: #74747c">*/</span>
+    <span style="color: #d73948">double</span> t <span style="color: #d73948">=</span> <span style="color: #4b69c6">uniform</span>() <span style="color: #d73948">*</span> <span style="color: #b60157">6</span><span style="color: #b60157">.</span><span style="color: #b60157">283185307179586</span>; <span style="color: #74747c">/*</span><span style="color: #74747c"> Distribution of angles </span><span style="color: #74747c">*/</span>
+
+    <span style="color: #d73948">double</span> s <span style="color: #d73948">=</span> <span style="color: #4b69c6">sqrt</span>(r);
+    saved_normal_realization <span style="color: #d73948">=</span> s <span style="color: #d73948">*</span> <span style="color: #4b69c6">sin</span>(t);
+    <span style="color: #d73948">return</span> s <span style="color: #d73948">*</span> <span style="color: #4b69c6">cos</span>(t);
+    }
+    box_muller_transform_needs_to_be_computed <span style="color: #d73948">=</span> <span style="color: #b60157">1</span>;
+    <span style="color: #d73948">return</span> saved_normal_realization;
+}
+
+<span style="color: #74747c">/*</span><span style="color: #74747c"> Generate 'SAMPLES' number of standard normal random variable realizations </span><span style="color: #74747c">*/</span>
+<span style="color: #d73948">#define</span> <span style="color: #4b69c6">SAMPLES</span> <span style="color: #b60157">10000</span>
+<span style="color: #d73948">int</span> <span style="color: #4b69c6">main</span>(<span style="color: #d73948">void</span>) {
+    <span style="color: #d73948">const</span> <span style="color: #4b69c6">uint64_t</span> seed <span style="color: #d73948">=</span> <span style="color: #b60157">12345</span>;
+    <span style="color: #4b69c6">seed_mt64_rand</span>(seed);
+
+    <span style="color: #d73948">for</span> (<span style="color: #d73948">int</span> i <span style="color: #d73948">=</span> <span style="color: #b60157">0</span>; i <span style="color: #d73948">&lt;</span> samples; i<span style="color: #d73948">++</span>) {
+    <span style="color: #4b69c6">printf</span>(<span style="color: #198810">"</span><span style="color: #b60157">%lf</span><span style="color: #1d6c76">\n</span><span style="color: #198810">"</span>, <span style="color: #4b69c6">normal</span>());
+    }
+
+    <span style="color: #d73948">return</span> <span style="color: #b60157">0</span>;
+}</code></pre></body></html>

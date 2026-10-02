@@ -1,106 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>RNC &mdash; Writing</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
-	<link rel="manifest" href="../site.webmanifest">
-    </head>
-    <body>
-	<h3>Probability Theory &mdash; Algebras</h3>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>RNC — Writing</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png"><link rel="manifest" href="../site.webmanifest"><style>/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
 
-	<p>
-	A probability space (&Omega;,&#x1D49C;,&#x2119;) consists of three elements.
-	</p>
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
 
-	<p>
-	The first element is the <i>sample space</i> &Omega;. It
-	is the space of all possible events. The second
-	element is the <i>&sigma;-algebra</i>, &#x1D49C;. This is a
-	collection of combinations of events in the sample space. In a
-	sense, it is a set of sets. The final element is a function
-	&#x2119;, which assigns a value to every element in &#x1D49C;.
-	Each element of the probaility space deserves discussion.
-	This article is dedicated to properties of the &sigma;-algebra
-	&#x1D49C;.
-	</p>
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
 
-	<p>
-	Algebras are collections of sets of &Omega; satisfying three properties:
-	<ul>
-	    <li>
-		&Omega; is a member of the algebra. That is,
-		the realization of all possible events is contained
-		in the algebra.
-	    </li>
-	    <li>
-		The algebra is closed under compliments. The
-		compliment (with respect to the set &Omega;) of any
-		element in the algebra will yield another element 
-		in the algebra.
-	    </li>
-	    <li>
-		The algebra is closed under <b>finite</b> unions.
-	    </li>
-	</ul>
-	</p>
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
 
-	<p>
-	The last property is significant, because it is what distinguishes
-	any algebra on &Omega; from a <i>&sigma;-algebra</i> on &Omega;.
-	An algebra is called a &sigma;-algebra if it satisfies the
-	additional property:
-	<ul>
-	    <li>
-		The algebra is closed under <b>countable</b> unions.
-	    </li>
-	</ul>
-	This final restriction distinguishes &#x1D49C; from more general
-	algebras that could be formed on &Omega;.
-	</p>
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
 
-	<p>
-	The collection &#x1D49C; must be a &sigma;-algebra if the triple
-	(&Omega;,&#x1D49C;,&#x2119;) is to be a probability space. 
-	The following results about algebras apply to probability spaces:
-	</p>
-
-	<p>
-	<b>algebras contain &#x2205;</b><br>
-	All algebras contain the entire sample space &Omega;. All
-	algebras are also closed under compliment. Therefore, all
-	algebras contain the compliment of the entire sample space,
-	&Omega;<sup>c</sup>. This set is the empty set &#x2205;.
-	</p>
-
-	<p>
-	<b>algebras are closed under intersection</b><br>
-	Take a finite union of elements of an algebra. The set formed by
-	the union is in the contained in the algebra, because of closure under
-	finite unions. Call this set B. The compliment of this set B<sup>c</sup> is
-	also contained in &#x1D49C;, because of closure under compliments. By
-	<a href="https://en.wikipedia.org/wiki/De_Morgan%27s_laws">De Morgan's law</a>,
-	the compliment of a union of sets (i.e. B<sup>c</sup>) is equivalent to the
-	intersection of the compliments of the sets. This shows
-	that algebras are closed under finite intersections.
-	</p>
-
-	<p>
-	Since 
-	<a href="https://en.wikipedia.org/wiki/De_Morgan%27s_laws">De Morgan's law</a>
-	extends to countable unions, &sigma;-algebras can be said to be
-	closed under countably many intersections. Algebras can
-	generally only be said to be closed under finite intersections.
-	</p>
-
-	<p>
-	<b>algebras are closed under differences</b><br>
-	Set differences can be stated in terms of intersections, and the result follows.
-	</p>
-    </body>
-</html>
-
-
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}</style></head><body><h3>Probability Theory — Algebras</h3><p>A probability space <math><mrow><mo>(</mo><mrow><mi mathvariant="normal">Ω</mi><mo>,</mo><mi>𝒜︀</mi><mo>,</mo><mi>ℙ</mi></mrow><mo>)</mo></mrow></math> consists of three elements.</p><p>The first element is the <em>sample space</em> <math><mi mathvariant="normal">Ω</mi></math>. It is the space of all possible events. The second element is the <em><math><mi>𝜎</mi></math>-algebra</em>, <math><mi>𝒜︀</mi></math>. This is a collection of combinations of events in the sample space. In a sense, it is a set of sets. The final element is a function <math><mi>ℙ</mi></math>, which assigns a value to every element in <math><mi>𝒜︀</mi></math>. Each element of the probaility space deserves discussion. This article is dedicated to properties of the <math><mi>𝜎</mi></math>-algebra <math><mi>𝒜︀</mi></math>.</p><p>Algebras are collections of sets of <math><mi mathvariant="normal">Ω</mi></math> satisfying three properties:</p><ul><li><math><mi mathvariant="normal">Ω</mi></math> is a member of the algebra. That is, the realization of all possible events is contained in the algebra.</li><li>The algebra is closed under compliments. The compliment (with respect to the set <math><mi mathvariant="normal">Ω</mi></math>) of any element in the algebra will yield another element in the algebra.</li><li>The algebra is closed under <strong>finite</strong> unions.</li></ul><p>The last property is significant, because it is what distinguishes any algebra on <math><mi mathvariant="normal">Ω</mi></math> from a <em><math><mi>𝜎</mi></math>-algebra</em> on <math><mi mathvariant="normal">Ω</mi></math>. An algebra is called a <math><mi>𝜎</mi></math>-algebra if it satisfies the additional property:</p><ul><li>The algebra is closed under <strong>countable</strong> unions.</li></ul><p>This final restriction distinguishes <math><mi>𝒜︀</mi></math> from more general algebras that could be formed on <math><mi mathvariant="normal">Ω</mi></math>.</p><p>The collection <math><mi>𝒜︀</mi></math> must be a <math><mi>𝜎</mi></math>-algebra if the triple <math><mrow><mo>(</mo><mrow><mi mathvariant="normal">Ω</mi><mo>,</mo><mi>𝒜︀</mi><mo>,</mo><mi>ℙ</mi></mrow><mo>)</mo></mrow></math> is to be a probability space. The following results about algebras apply to probability spaces:</p><p><strong>algebras contain <math><mi>∅</mi></math></strong><br>All algebras contain the entire sample space <math><mi mathvariant="normal">Ω</mi></math>. All algebras are also closed under compliment. Therefore, all algebras contain the compliment of the entire sample space, <math><msup><mi mathvariant="normal">Ω</mi><mi>𝑐</mi></msup></math>. This set is the empty set <math><mi>∅</mi></math>.</p><p><strong>algebras are closed under intersection</strong><br>Take a finite union of elements of an algebra. The set formed by the union is in the contained in the algebra, because of closure under finite unions. Call this set <math><mi>𝐵</mi></math>. The compliment of this set <math><msup><mi>𝐵</mi><mi>𝑐</mi></msup></math> is also contained in <math><mi>𝒜︀</mi></math>, because of closure under compliments. By <a href="https://en.wikipedia.org/wiki/De_Morgan%27s_laws">De Morgan’s law</a>, the compliment of a union of sets (i.e. <math><msup><mi>𝐵</mi><mi>𝑐</mi></msup></math>) is equivalent to the intersection of the compliments of the sets. This shows that algebras are closed under finite intersections.</p><p>Since <a href="https://en.wikipedia.org/wiki/De_Morgan%27s_laws">De Morgan’s law</a> extends to countable unions, <math><mi>𝜎</mi></math>-algebras can be said to be closed under countably many intersections. Algebras can generally only be said to be closed under finite intersections.</p><p><strong>algebras are closed under differences</strong><br>Set differences can be stated in terms of intersections, and the result follows.</p></body></html>

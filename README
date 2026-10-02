@@ -14,6 +14,10 @@ The ./index.html gathering place of all thoughts.
 But thoughts live in the ./thoughts/ directory.
 Everything else is irrelevant.
 
+The pages are generated. Write posts in ./src/posts/ (Typst),
+list them in ./src/posts.typ, then run ./build.sh to regenerate
+./index.html and ./thoughts/*.html. Needs typst >= 0.15.
+
 
                          The License
 ============================================================

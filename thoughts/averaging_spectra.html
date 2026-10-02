@@ -1,26 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>RNC &mdash; Writing</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
-	<link rel="manifest" href="../site.webmanifest">
-    </head>
-    <body>
-	<h3>Averaging Spectra</h3>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>RNC — Writing</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png"><link rel="manifest" href="../site.webmanifest"><style>/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
 
-	<p>Averaging time series in the time domain vs. spectra in the frequency domain is
-        fundamentally different, due to the fact that the power spectrum is a non-linear
-        function on the spectra.</p>
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
 
-        <hr>
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
 
-        <!-- Time series analysis overview:                                   -->
-        <!-- https://www.nber.org/system/files/working_papers/w0037/w0037.pdf -->
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
 
-        <p></p>
-    </body>
-</html>
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
+
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}</style></head><body><h3>Averaging Spectra</h3><p>Averaging time series in the time domain vs. spectra in the frequency domain is fundamentally different, due to the fact that the power spectrum is a non-linear function on the spectra.</p><hr></body></html>

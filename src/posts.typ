@@ -1,0 +1,43 @@
+// Registry of posts, newest first. Each entry `id` is the file name in
+// src/posts/ and in thoughts/ (id.typ -> thoughts/id.html).
+// Set `listed: false` to publish a page without listing it on the index.
+// `heading` overrides the page heading when it differs from the index title.
+#let posts = (
+  (id: "probability_theory_coupling", title: "Probability Theory — Coupling", date: "09-07-26",
+   summary: "A basic introduction to coupling, with an eye toward Markov processes and optimal transport."),
+  (id: "rotated_coordinate_reference_systems", title: "Rotated Coordinate Reference Systems", date: "07-17-26",
+   summary: "How to create rotated coordinate reference systems in proj or WKT formats."),
+  (id: "associated_legendre_functions", title: "Associated Legendre Function Conventions", date: "07-14-26",
+   summary: "Discussion of alf conventions. Small implementation of fully-normalized, ultra high degree and order alf's."),
+  (id: "fast_fourier_transform", title: "Fast Fourier Transform", heading: "Fast Fourier Transform Example", date: "02-26-26",
+   summary: "Small implementation of the Fast Fourier Transform."),
+  (id: "probability_theory_change_of_variables", title: "Probability Theory — A Random Thought Regarding Change of Variables", date: "02-18-26",
+   summary: "The change of variables formulas is a practical tool to remove codebase complexity."),
+  (id: "reformatting_usb_drives", title: "Reformatting USB Drive", heading: "Reformatting USB Sticks", date: "02-17-26",
+   summary: "Lessons I learned while reformatting a USB drive."),
+  (id: "monotone_convergence_theorem", title: "Monotone Convergence Theorem", date: "02-16-26",
+   summary: "A brief overview of Lebesgue's famous monotone convergence theorem."),
+  (id: "singular_value_decomposition", title: "The Singular Value Decomposition", date: "02-13-26",
+   summary: "Basic interpretation and results concerning the singular value decomposition."),
+  (id: "counting_tensor_components", title: "Counting Tensor Components", date: "02-13-26",
+   summary: "Using the Schur-Weyl decomposition to count tensor components."),
+  (id: "obfuscate_program", title: "Obfuscate Program", date: "1-17-26",
+   summary: "C++ program to format text files for HTML."),
+  (id: "probability_theory_convergence_program", title: "Probability Theory — Convergence Program", date: "1-16-26",
+   summary: "C program demonstrating convergence in probability."),
+  (id: "probability_theory_markovs_inequality", title: "Probability Theory — Markov's Inequality", date: "1-12-26",
+   summary: "An upper bound for non-negative functions of random variables."),
+  (id: "probability_theory_convergence", title: "Probability Theory — Convergence", date: "1-12-26",
+   summary: "Random variables can converge to each other in different ways."),
+  (id: "limit_superior_limit_inferior", title: "Limit Superior and Limit Inferior", date: "1-11-26",
+   summary: "I always confuse these in my head. So time to write about them!"),
+  (id: "convex_functions", title: "Convex Functions", date: "1-7-26",
+   summary: "Brief coverage of convex functions."),
+  (id: "probability_theory_algebras", title: "Probability Theory — Algebras", date: "1-4-26",
+   summary: "Simple results concerning algebras."),
+  // Published but never listed on the index.
+  (id: "analytic_functions", title: "Analytic Functions", listed: false),
+  (id: "averaging_spectra", title: "Averaging Spectra", listed: false),
+  (id: "luke_22", title: "Luke 22", listed: false),
+  (id: "orogenic_gold_deposits", title: "Orogenic Gold Deposits", listed: false),
+)

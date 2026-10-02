@@ -1,74 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>RNC &mdash; Writing</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
-	<link rel="manifest" href="../site.webmanifest">
-    </head>
-    <body>
-        <h3>Rotated Coordinate Reference Systems</h3>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>RNC — Writing</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png"><link rel="manifest" href="../site.webmanifest"><style>/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
 
-        <p>
-        In prospect scale geophysics, surveys are usually conducted with respect
-        to geologic trends, not geographic reference points. For instance,
-        total-field anomaly surveys at low magnetic latitudes flights will often
-        be flown north to south (magnetically). This will usually be within a
-        couple of degrees of geographic north. But if potentially significant
-        geologic trends are recognized in the region, flight lines may be
-        reoriented perpendicular to the strike of these features. Much prospect
-        scale scale work end up naturally rotated with respect to geographic north.
-        </p>
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
 
-        <p>
-        However, most coordinate reference systems are naturally oriented with
-        respect to geographic reference points. This creates friction between
-        'global' and 'survey-local' coordinate systems. We would prefer to do
-        post processing in a survey-local coordinate reference system for many
-        reasons, but out of the box most GIS software does not come with our
-        desired grid local coordinate system. This is an issue for integrating
-        our post processing routines for local work with existing projects.
-        </p>
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
 
-        <p>
-        Usually the difference between the local and global coordinate
-        transforms can be simply described by an affine transformation and
-        transformations between other supported coordinate reference systems.
-        So the trick to create a coordiante reference system will come down
-        to encoding this affine transformation in a way GIS programs will
-        understand. Here I provide example proj and WKT format coordinate
-        reference systems that do this in different scenarios.
-        </p>
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
 
-        <p>
-        The case I will cover here is translating between supported
-        projected coordinate reference systems and unsupported, rotated
-        coordinate reference systems. The proj and WKT format strings
-        have been tested in QGIS 3.0 and 4.0 with success.
-        </p>
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
 
-        <p>
-        UTM stands for Universal Transverse Mercator. It is a common projection
-        for prospect scale geophysical data. However, its coordinate axis
-        are aligned with geographic east and north (on the central meridian at
-        least). To describe an affine rotation between Transverse Mercator
-        projections, we can use the <i>Oblique Mercator</i> coordinate system
-        as the destination. We will construct an Oblique Mercator system
-        with a custom center and rotation of the central meridian from the vertical. 
-        In this way, we can describe an arbitrarily translated grid.
-        </p>
-
-        <code>
-        </code>
-
-        <p>where <code>CENTERX</code> is the center of the Oblique Mercator alternatively, in WKT format:</p>
-
-        <code>
-        </code>
-
-	<p>IN PROGRESS</p>
-    </body>
-</html>
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}</style></head><body><h3>Rotated Coordinate Reference Systems</h3><p>In prospect scale geophysics, surveys are usually conducted with respect to geologic trends, not geographic reference points. For instance, total-field anomaly surveys at low magnetic latitudes flights will often be flown north to south (magnetically). This will usually be within a couple of degrees of geographic north. But if potentially significant geologic trends are recognized in the region, flight lines may be reoriented perpendicular to the strike of these features. Much prospect scale scale work end up naturally rotated with respect to geographic north.</p><p>However, most coordinate reference systems are naturally oriented with respect to geographic reference points. This creates friction between ‘global’ and ‘survey-local’ coordinate systems. We would prefer to do post processing in a survey-local coordinate reference system for many reasons, but out of the box most GIS software does not come with our desired grid local coordinate system. This is an issue for integrating our post processing routines for local work with existing projects.</p><p>Usually the difference between the local and global coordinate transforms can be simply described by an affine transformation and transformations between other supported coordinate reference systems. So the trick to create a coordiante reference system will come down to encoding this affine transformation in a way GIS programs will understand. Here I provide example proj and WKT format coordinate reference systems that do this in different scenarios.</p><p>The case I will cover here is translating between supported projected coordinate reference systems and unsupported, rotated coordinate reference systems. The proj and WKT format strings have been tested in QGIS 3.0 and 4.0 with success.</p><p>UTM stands for Universal Transverse Mercator. It is a common projection for prospect scale geophysical data. However, its coordinate axis are aligned with geographic east and north (on the central meridian at least). To describe an affine rotation between Transverse Mercator projections, we can use the <em>Oblique Mercator</em> coordinate system as the destination. We will construct an Oblique Mercator system with a custom center and rotation of the central meridian from the vertical. In this way, we can describe an arbitrarily translated grid.</p><pre><code data-lang="text"></code></pre><p>where <code>CENTERX</code> is the center of the Oblique Mercator alternatively, in WKT format:</p><pre><code data-lang="text"></code></pre><p>IN PROGRESS</p></body></html>

@@ -1,98 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>RNC &mdash; Writing</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png">
-	<link rel="manifest" href="../site.webmanifest">
-    </head>
-    <body>
-	<h3>The Singular Value Decomposition</h3>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>RNC — Writing</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png"><link rel="manifest" href="../site.webmanifest"><style>/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
 
-	<p> The basic intuition of the singular value decomposition (SVD) is elaborated.
-	Some geophysical perspective is drawn in as well, following Dr. William Menke's
-	book <a href="https://www.ldeo.columbia.edu/~menke/www_users_menke/gdadit/index.htm">Geophysical Data Analysis: Discrete Inverse Theory</a>
-	and class notes from Dr. Yaoguo Li's course "Machine Learning and Inverse Theory". </p>
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
 
-	<hr>
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
 
-	<h3>Intuition</h3>
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
 
-	<p> The SVD can be performed on any real or complex matrix. I am sure it can be performed
-	on other fields as well, although one may have to write it from scratch. But in essence, the SVD
-	does not have any special requirements about the dimension or the values of components of the
-	matrix. It could be a random matrix for all it cares! </p>
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
 
-	<p> The SVD breaks a matrix up into the matrix product of three other matrices. If G is a matrix of 
-	size NxM, the SVD of G = USV<sup>T</sup>. The matrix U is called the left singular vectors, of size
-	NxN. The singular values are ordered along the diagonal of the matrix S &mdash; otherwise the matrix
-	is zero. The singular value matrix is of size NxM. The last matrix V is the right singular vectors.
-	It has size MxM. </p>
-
-	<p> The left and right singular vector matrices (U and V respectively) are both unitary matrices.
-	Arguably the most important property of unitary matrices is that their transpose is equal to their
-	own inverse. So U<sup>H</sup>=U<sup>-1</sup> or equivalently U<sup>H</sup>U=UU<sup>H</sup>=I. The
-	same follows for V. Real unitary matrices are usually called orthogonal matrices. </p>
-
-	<p> The structure of the singular vector matrices facilitate geometric intuition. A unitary transformation
-	can be interpreted geometrically as a rotation. (Strictly, this is true only if the determinant is 1. If the
-	determinant is -1, it can be interpreted as a rotation and a reflection about some hyperplane). Rotations
-	change the values of components, but not the distances between points. </p>
-
-	<p> Based on our intuition about unitary transforms, we can interpret the SVD. The SVD says a matrix
-	can be interpreted as a rotation, followed by a scaling and reprojection, and finally another rotation.
-	The interpretation of the singular value matrix S as a scaling and reprojection follows from the
-	observation that only diagonal values are non zero, they are positive, and always real.
-	Since the SVD applies to any matrix, it says that any matrix can be interpreted as a rotation,
-	rescaling, reprojection, and rotation. </p>
-
-	<hr>
-
-	<h3>Relationship to the Eigenvalue Decomposition</h3>
-
-	<p> While these two transformations look similar, they are only the same when the matrix
-	in question is positive semi-definite. A simple way to understand they are in general 
-	different is that eigenvalues can be complex and negative &mdash; however, singular
-	values are always real and strictly non-negative. </p>
-
-	<p> If G is the matrix in question, then U corresponds to the eigenvectors of GG<sup>*</sup>,
-	where G<sup>*</sup>=VS<sup>-1</sup>U<sup>T</sup> is the generalized inverse of the matrix G.
-	The right singular vectors correspond to the eigenvectors of the matrix G<sup>*</sup>G. </p>
-
-	<hr>
-
-	<h3>Uniqueness</h3>
-
-	<p> The singular values can be repeated, but the set of singular values is unique. </p>
-
-	<p> The singular vectors are another story. They are unique up to a
-	global multiplication of columns of U and V by a complex phase factor
-	(or sign for real matrix). But there is another case of non-uniqueness
-	that plauges singular values regarding degenerate singular values. When
-	the singular values are repeated, the subspaces of identical singular
-	values can be rotated by some unitary matrix. (The details are slightly
-	above my head, so I am not going to elaborate on this technically). </p>
-
-	<p> And of course the matrix columns can be permuted, but usually we
-	prevent this degree of freedom by specifying that the singular values
-	must be sorted along the diagonal of S in non-increasing order. </p>
-
-	<p> Long story short, the SVD decomposition is not unique. The set of singular values are unique. </p>
-
-	<hr>
-
-	<h3>Algorithmic Concerns</h3>
-
-	<p> Computationally, there are several different ways to compute the SVD. But in general, the
-	algorithms have cubic temporal complexity and square spatial complexity. So for practical problems,
-	the SVD can be extremely expensive. Truncating the SVD can save us a lot in space and time, but
-	asymptotically the cost of the SVD does not change. The algorithms usually solve for the singular
-	vectors and singular values in decreasing order &mdash; so the smallest singular value is usually the
-	most expensive to solve for. The largest singular value is usually the cheapest to compute. </p>
-
-	<!-- To be written: SVD, Data Null Space, Model Null Space. -->
-    </body>
-</html>
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}</style></head><body><h3>The Singular Value Decomposition</h3><p>The basic intuition of the singular value decomposition (SVD) is elaborated. Some geophysical perspective is drawn in as well, following Dr. William Menke’s book <a href="https://www.ldeo.columbia.edu/~menke/www_users_menke/gdadit/index.htm">Geophysical Data Analysis: Discrete Inverse Theory</a> and class notes from Dr. Yaoguo Li’s course “Machine Learning and Inverse Theory”.</p><hr><h3>Intuition</h3><p>The SVD can be performed on any real or complex matrix. I am sure it can be performed on other fields as well, although one may have to write it from scratch. But in essence, the SVD does not have any special requirements about the dimension or the values of components of the matrix. It could be a random matrix for all it cares!</p><p>The SVD breaks a matrix up into the matrix product of three other matrices. If <math><mi>𝐺</mi></math> is a matrix of size <math><mi>𝑁</mi><mo lspace="0.2222222222222222em" rspace="0.2222222222222222em">×</mo><mi>𝑀</mi></math>, the SVD of <math><mi>𝐺</mi><mo>=</mo><mi>𝑈</mi><mi>𝑆</mi><msup><mi>𝑉</mi><mi>𝑇</mi></msup></math>. The matrix <math><mi>𝑈</mi></math> is called the left singular vectors, of size <math><mi>𝑁</mi><mo lspace="0.2222222222222222em" rspace="0.2222222222222222em">×</mo><mi>𝑁</mi></math>. The singular values are ordered along the diagonal of the matrix <math><mi>𝑆</mi></math> — otherwise the matrix is zero. The singular value matrix is of size <math><mi>𝑁</mi><mo lspace="0.2222222222222222em" rspace="0.2222222222222222em">×</mo><mi>𝑀</mi></math>. The last matrix <math><mi>𝑉</mi></math> is the right singular vectors. It has size <math><mi>𝑀</mi><mo lspace="0.2222222222222222em" rspace="0.2222222222222222em">×</mo><mi>𝑀</mi></math>.</p><p>The left and right singular vector matrices (<math><mi>𝑈</mi></math> and <math><mi>𝑉</mi></math> respectively) are both unitary matrices. Arguably the most important property of unitary matrices is that their transpose is equal to their own inverse. So <math><msup><mi>𝑈</mi><mi>𝐻</mi></msup><mo>=</mo><msup><mi>𝑈</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></math> or equivalently <math><msup><mi>𝑈</mi><mi>𝐻</mi></msup><mi>𝑈</mi><mo>=</mo><mi>𝑈</mi><msup><mi>𝑈</mi><mi>𝐻</mi></msup><mo>=</mo><mi>𝐼</mi></math>. The same follows for <math><mi>𝑉</mi></math>. Real unitary matrices are usually called orthogonal matrices.</p><p>The structure of the singular vector matrices facilitate geometric intuition. A unitary transformation can be interpreted geometrically as a rotation. (Strictly, this is true only if the determinant is 1. If the determinant is −1, it can be interpreted as a rotation and a reflection about some hyperplane). Rotations change the values of components, but not the distances between points.</p><p>Based on our intuition about unitary transforms, we can interpret the SVD. The SVD says a matrix can be interpreted as a rotation, followed by a scaling and reprojection, and finally another rotation. The interpretation of the singular value matrix <math><mi>𝑆</mi></math> as a scaling and reprojection follows from the observation that only diagonal values are non zero, they are positive, and always real. Since the SVD applies to any matrix, it says that any matrix can be interpreted as a rotation, rescaling, reprojection, and rotation.</p><hr><h3>Relationship to the Eigenvalue Decomposition</h3><p>While these two transformations look similar, they are only the same when the matrix in question is positive semi-definite. A simple way to understand they are in general different is that eigenvalues can be complex and negative — however, singular values are always real and strictly non-negative.</p><p>If <math><mi>𝐺</mi></math> is the matrix in question, then <math><mi>𝑈</mi></math> corresponds to the eigenvectors of <math><mi>𝐺</mi><msup><mi>𝐺</mi><mo>∗</mo></msup></math>, where <math><msup><mi>𝐺</mi><mo>∗</mo></msup><mo>=</mo><mi>𝑉</mi><msup><mi>𝑆</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><msup><mi>𝑈</mi><mi>𝑇</mi></msup></math> is the generalized inverse of the matrix <math><mi>𝐺</mi></math>. The right singular vectors correspond to the eigenvectors of the matrix <math><msup><mi>𝐺</mi><mo>∗</mo></msup><mi>𝐺</mi></math>.</p><hr><h3>Uniqueness</h3><p>The singular values can be repeated, but the set of singular values is unique.</p><p>The singular vectors are another story. They are unique up to a global multiplication of columns of <math><mi>𝑈</mi></math> and <math><mi>𝑉</mi></math> by a complex phase factor (or sign for real matrix). But there is another case of non-uniqueness that plauges singular values regarding degenerate singular values. When the singular values are repeated, the subspaces of identical singular values can be rotated by some unitary matrix. (The details are slightly above my head, so I am not going to elaborate on this technically).</p><p>And of course the matrix columns can be permuted, but usually we prevent this degree of freedom by specifying that the singular values must be sorted along the diagonal of <math><mi>𝑆</mi></math> in non-increasing order.</p><p>Long story short, the SVD decomposition is not unique. The set of singular values are unique.</p><hr><h3>Algorithmic Concerns</h3><p>Computationally, there are several different ways to compute the SVD. But in general, the algorithms have cubic temporal complexity and square spatial complexity. So for practical problems, the SVD can be extremely expensive. Truncating the SVD can save us a lot in space and time, but asymptotically the cost of the SVD does not change. The algorithms usually solve for the singular vectors and singular values in decreasing order — so the smallest singular value is usually the most expensive to solve for. The largest singular value is usually the cheapest to compute.</p></body></html>
