@@ -72,98 +72,98 @@ mover[accent="true" i] > :not(:first-child) {
   math-depth: inherit;
   math-style: inherit;
   math-shift: inherit;
-}</style></head><body><h1>Associated Legendre Function Conventions</h1><p>Associated Legendre functions pop up all over the place in mathematical physics, because they form a complete basis on the surface of the 3D sphere. Thus, solutions to problems with radial symmetry are often expressed in them. Because the Earth is spherical *cough*, geodesists often utilize them. EGM84, EGM96, and EGM2008 were all released as harmonic coefficients. Ergo, my interest.</p><p>But being so popular in so many fields of applied mathematics, many different customs have arisen around them. Different normalizations, adjustments, and conventions. When translating between different fields of physics, or even between different books in the same field, these conventions can really confuse me if I do not remember them. Ergo, this post.</p><hr><p>Scaling factors are the first detail covered. Different fields use different scaling factors. In physics proper, I am under the impression unnormalized associated Legendre functions (alf’s from now on) are the norm. In geomagnetism, Schmidt semi-normalization is common. And in geodesy, fully normalized alf’s are customary.</p><p>Mathematically, scaling factors control what the basis integrates to over the unit sphere. So it makes sense people would change it to suit their particular flavor of physics.</p><p>Practically, scaling factors control some of the numerical behavior of alf’s. Unnormalized alf’s will overflow quickly (around degree 30 for 32-bit IEEE floats, and around degree 150 for 64-bit IEEE floats). This is unacceptably low number of basis functions in fields like geodesy and geomagnetism. Normalizations keep the alf’s from overflowing sooner than they otherwise would.</p><p>Phase factors are another issue. I do not quite understand the origins of the Condon-Shortly phase factor, but occasionally all of the odd degree alf functions are multiplied by negative one. Watch out for this, it will cause sign errors everywhere.</p><hr><p>Below is a routine to compute fully normalized alf’s. It is stable up to degrees ~2700. I have wrote functions like these before, but I always end up loosing the implementation and needing to rewrite them. So here it is, once and for all copy and pastable.</p><p>Reference: <a href="https://doi.org/10.1007/s00190-002-0216-2">Holmes and Featherstone, 2002</a>. Well written paper, if I may insert my opinion. Of course I can, this is <em>my</em> site!</p><pre><code data-lang="scheme">(require racket/format)
-(require racket/flonum)
+}</style></head><body><h1>Associated Legendre Function Conventions</h1><p>Associated Legendre functions pop up all over the place in mathematical physics, because they form a complete basis on the surface of the 3D sphere. Thus, solutions to problems with radial symmetry are often expressed in them. Because the Earth is spherical *cough*, geodesists often utilize them. EGM84, EGM96, and EGM2008 were all released as harmonic coefficients. Ergo, my interest.</p><p>But being so popular in so many fields of applied mathematics, many different customs have arisen around them. Different normalizations, adjustments, and conventions. When translating between different fields of physics, or even between different books in the same field, these conventions can really confuse me if I do not remember them. Ergo, this post.</p><hr><p>Scaling factors are the first detail covered. Different fields use different scaling factors. In physics proper, I am under the impression unnormalized associated Legendre functions (alf’s from now on) are the norm. In geomagnetism, Schmidt semi-normalization is common. And in geodesy, fully normalized alf’s are customary.</p><p>Mathematically, scaling factors control what the basis integrates to over the unit sphere. So it makes sense people would change it to suit their particular flavor of physics.</p><p>Practically, scaling factors control some of the numerical behavior of alf’s. Unnormalized alf’s will overflow quickly (around degree 30 for 32-bit IEEE floats, and around degree 150 for 64-bit IEEE floats). This is unacceptably low number of basis functions in fields like geodesy and geomagnetism. Normalizations keep the alf’s from overflowing sooner than they otherwise would.</p><p>Phase factors are another issue. I do not quite understand the origins of the Condon-Shortly phase factor, but occasionally all of the odd degree alf functions are multiplied by negative one. Watch out for this, it will cause sign errors everywhere.</p><hr><p>Below is a routine to compute fully normalized alf’s. It is stable up to degrees ~2700. I have wrote functions like these before, but I always end up loosing the implementation and needing to rewrite them. So here it is, once and for all copy and pastable.</p><p>Reference: <a href="https://doi.org/10.1007/s00190-002-0216-2">Holmes and Featherstone, 2002</a>. Well written paper, if I may insert my opinion. Of course I can, this is <em>my</em> site!</p><pre><code data-lang="racket">(<span style="color: #d73948">require</span> racket/format)
+(<span style="color: #d73948">require</span> racket/flonum)
 
-(define (prod-m m)
-  ;; Compute the product
-  ;;                      m
-  ;;  prod-m = sqrt(3) * prod sqrt((2i + 1) / (2i))     for all m >= 1
-  ;;                     i=2
-  ;;
-  ;; reasonably fast. I could not speed this up by implementing it in terms
-  ;; of a centered binomial coefficient, although this is possible. To see,
-  ;; expand product into double factorials.
-  (if (= m 0)
-      1.0
-      (let loop ([i 2] [acc 1.0])
-        (if (> i m)
-            (flsqrt (fl* 3.0 acc))
+(<span style="color: #d73948">define</span> (<span style="color: #4b69c6">prod-m</span> m)
+  <span style="color: #74747c">;; Compute the product</span>
+  <span style="color: #74747c">;;                      m</span>
+  <span style="color: #74747c">;;  prod-m = sqrt(3) * prod sqrt((2i + 1) / (2i))     for all m >= 1</span>
+  <span style="color: #74747c">;;                     i=2</span>
+  <span style="color: #74747c">;;</span>
+  <span style="color: #74747c">;; reasonably fast. I could not speed this up by implementing it in terms</span>
+  <span style="color: #74747c">;; of a centered binomial coefficient, although this is possible. To see,</span>
+  <span style="color: #74747c">;; expand product into double factorials.</span>
+  (<span style="color: #d73948">if</span> (= m <span style="color: #b60157">0</span>)
+      <span style="color: #b60157">1</span>.<span style="color: #b60157">0</span>
+      (<span style="color: #d73948">let</span> loop ([i <span style="color: #b60157">2</span>] [acc <span style="color: #b60157">1</span>.<span style="color: #b60157">0</span>])
+        (<span style="color: #d73948">if</span> (> i m)
+            (flsqrt (fl* <span style="color: #b60157">3</span>.<span style="color: #b60157">0</span> acc))
             (let* ([fl-i (exact->inexact i)]
-                   [two-i (fl* 2.0 fl-i)]
-                   [term (fl/ (fl+ two-i 1.0) two-i)])
-              (loop (+ i 1) (fl* acc term)))))))
+                   [two-i (fl* <span style="color: #b60157">2</span>.<span style="color: #b60157">0</span> fl-i)]
+                   [term (fl/ (fl+ two-i <span style="color: #b60157">1</span>.<span style="color: #b60157">0</span>) two-i)])
+              (loop (+ i <span style="color: #b60157">1</span>) (fl* acc term)))))))
 
-(define (a-nm n m)
+(<span style="color: #d73948">define</span> (<span style="color: #4b69c6">a-nm</span> n m)
   (let* ([fl-n (exact->inexact n)]
          [fl-m (exact->inexact m)]
-         [two-n (fl* 2.0 fl-n)])
-    (flsqrt (fl/ (fl* (fl- two-n 1.0) (fl+ two-n 1.0))
+         [two-n (fl* <span style="color: #b60157">2</span>.<span style="color: #b60157">0</span> fl-n)])
+    (flsqrt (fl/ (fl* (fl- two-n <span style="color: #b60157">1</span>.<span style="color: #b60157">0</span>) (fl+ two-n <span style="color: #b60157">1</span>.<span style="color: #b60157">0</span>))
                  (fl* (fl- fl-n fl-m) (fl+ fl-n fl-m))))))
 
-(define (b-nm n m)
+(<span style="color: #d73948">define</span> (<span style="color: #4b69c6">b-nm</span> n m)
   (let* ([fl-n (exact->inexact n)]
          [fl-m (exact->inexact m)]
-         [two-n (fl* 2.0 fl-n)]
+         [two-n (fl* <span style="color: #b60157">2</span>.<span style="color: #b60157">0</span> fl-n)]
          [n-plus-m (fl+ fl-n fl-m)]
          [n-minus-m (fl- fl-n fl-m)])
-    (flsqrt (fl/ (fl* (fl+ two-n 1.0)
-                      (fl* (fl- n-plus-m 1.0) (fl- n-minus-m 1.0)))
-                 (fl* n-minus-m (fl* n-plus-m (fl- two-n 3.0)))))))
+    (flsqrt (fl/ (fl* (fl+ two-n <span style="color: #b60157">1</span>.<span style="color: #b60157">0</span>)
+                      (fl* (fl- n-plus-m <span style="color: #b60157">1</span>.<span style="color: #b60157">0</span>) (fl- n-minus-m <span style="color: #b60157">1</span>.<span style="color: #b60157">0</span>)))
+                 (fl* n-minus-m (fl* n-plus-m (fl- two-n <span style="color: #b60157">3</span>.<span style="color: #b60157">0</span>)))))))
 
-(define (f-nm n m)
+(<span style="color: #d73948">define</span> (<span style="color: #4b69c6">f-nm</span> n m)
   (let* ([fl-n (exact->inexact n)]
          [fl-m (exact->inexact m)]
-         [two-n (fl* 2.0 fl-n)])
-    (flsqrt (fl/ (fl* (fl- (fl* fl-n fl-n) (fl* fl-m fl-m)) (fl+ two-n 1.0))
-                 (fl- two-n 1.0)))))
+         [two-n (fl* <span style="color: #b60157">2</span>.<span style="color: #b60157">0</span> fl-n)])
+    (flsqrt (fl/ (fl* (fl- (fl* fl-n fl-n) (fl* fl-m fl-m)) (fl+ two-n <span style="color: #b60157">1</span>.<span style="color: #b60157">0</span>))
+                 (fl- two-n <span style="color: #b60157">1</span>.<span style="color: #b60157">0</span>)))))
 
-(define (compute-scaled-alf degree order theta)
-  ;; Implements the Holmes &amp; Featherstone (2002) first modified forward column
-  ;; technique to compute scaled, stable high order and degree fully normalized
-  ;; associated Legendre functions (alf's).
-  ;;
-  ;; Returns a float scaled-alf, which is the value of the associated Legendre
-  ;; function scaled by 1e-280 and with u^m factored out.
+(<span style="color: #d73948">define</span> (<span style="color: #4b69c6">compute-scaled-alf</span> degree order theta)
+  <span style="color: #74747c">;; Implements the Holmes &amp; Featherstone (2002) first modified forward column</span>
+  <span style="color: #74747c">;; technique to compute scaled, stable high order and degree fully normalized</span>
+  <span style="color: #74747c">;; associated Legendre functions (alf's).</span>
+  <span style="color: #74747c">;;</span>
+  <span style="color: #74747c">;; Returns a float scaled-alf, which is the value of the associated Legendre</span>
+  <span style="color: #74747c">;; function scaled by 1e-280 and with u^m factored out.</span>
   (let* ([fl-theta (exact->inexact theta)]
          [t (flcos fl-theta)]
          [u (flsin fl-theta)]
          [fl-order (exact->inexact order)]
-         [pi-m (fl* (prod-m order) 1e-280)])
+         [pi-m (fl* (prod-m order) 1e-<span style="color: #b60157">280</span>)])
 
-    (define (iter n previous-alf-1 previous-alf-2)
+    (<span style="color: #d73948">define</span> (<span style="color: #4b69c6">iter</span> n previous-alf-<span style="color: #b60157">1</span> previous-alf-<span style="color: #b60157">2</span>)
       (let* ([fl-n (exact->inexact n)]
              [current-alf
-              (if (fl= previous-alf-2 0.0)
-                  (fl* (a-nm n order) (fl* t previous-alf-1))
-                  (fl- (fl* (a-nm n order) (fl* t previous-alf-1))
-                       (fl* (b-nm n order) previous-alf-2)))])
-        (if (= n degree)
+              (<span style="color: #d73948">if</span> (fl= previous-alf-<span style="color: #b60157">2</span> <span style="color: #b60157">0</span>.<span style="color: #b60157">0</span>)
+                  (fl* (a-nm n order) (fl* t previous-alf-<span style="color: #b60157">1</span>))
+                  (fl- (fl* (a-nm n order) (fl* t previous-alf-<span style="color: #b60157">1</span>))
+                       (fl* (b-nm n order) previous-alf-<span style="color: #b60157">2</span>)))])
+        (<span style="color: #d73948">if</span> (= n degree)
             current-alf
-            (iter (+ n 1) current-alf previous-alf-1))))
+            (iter (+ n <span style="color: #b60157">1</span>) current-alf previous-alf-<span style="color: #b60157">1</span>))))
 
-    (if (= degree order)
+    (<span style="color: #d73948">if</span> (= degree order)
         pi-m
-        (iter (+ order 1) pi-m 0.0))))
+        (iter (+ order <span style="color: #b60157">1</span>) pi-m <span style="color: #b60157">0</span>.<span style="color: #b60157">0</span>))))
 
 
-(define (alf degree order theta)
-  ;; High order and degree, fully-normalized associated Legendre functions,
-  ;; stable up to degree and order ~2700.
-  ;;
-  ;; The majority of the logic is contained in the routine
-  ;; compute-scaled-alf, which implements the first modified
-  ;; forward column routine provided by Holmes &amp; Featherstone (2002)
-  ;;
-  ;; Paper: https://doi.org/10.1007/s00190-002-0216-2
-  (unless (&lt;= 0.0 theta pi)
-    (error 'theta-out-of-range
-           "Colatitude theta must be in range [0.0, pi] (got ~a)" theta))
-  (when (&lt; degree 0)
-    (error 'invalid-degree "degree cannot be negative (got ~a)" degree))
+(<span style="color: #d73948">define</span> (<span style="color: #4b69c6">alf</span> degree order theta)
+  <span style="color: #74747c">;; High order and degree, fully-normalized associated Legendre functions,</span>
+  <span style="color: #74747c">;; stable up to degree and order ~2700.</span>
+  <span style="color: #74747c">;;</span>
+  <span style="color: #74747c">;; The majority of the logic is contained in the routine</span>
+  <span style="color: #74747c">;; compute-scaled-alf, which implements the first modified</span>
+  <span style="color: #74747c">;; forward column routine provided by Holmes &amp; Featherstone (2002)</span>
+  <span style="color: #74747c">;;</span>
+  <span style="color: #74747c">;; Paper: https://doi.org/10.1007/s00190-002-0216-2</span>
+  (unless (&lt;= <span style="color: #b60157">0</span>.<span style="color: #b60157">0</span> theta pi)
+    (<span style="color: #d73948">error</span> 'theta-out-of-range
+           <span style="color: #198810">"Colatitude theta must be in range [0.0, pi] (got ~a)"</span> theta))
+  (when (&lt; degree <span style="color: #b60157">0</span>)
+    (<span style="color: #d73948">error</span> 'invalid-degree <span style="color: #198810">"degree cannot be negative (got ~a)"</span> degree))
   (when (> (abs order) degree)
-    (error 'invalid-order
-           "magnitude of order |m| (got ~a) cannot be greater than degree n (got ~a)"
+    (<span style="color: #d73948">error</span> 'invalid-order
+           <span style="color: #198810">"magnitude of order |m| (got ~a) cannot be greater than degree n (got ~a)"</span>
            order degree))
   (let* ([fl-theta (exact->inexact theta)]
          [scaled-alf (compute-scaled-alf degree order fl-theta)]

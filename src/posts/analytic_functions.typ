@@ -24,7 +24,7 @@ differentiable. The terms are used interchangably. If one
 can show that a complex function is complex differentiable
 on an open set, then this does imply analyticity.
 
-```scheme
+```racket
 (require racket/format)
 (require racket/flonum)
 

@@ -52,7 +52,7 @@ Reference:
 #link("https://doi.org/10.1007/s00190-002-0216-2")[Holmes and Featherstone, 2002]. Well written paper, if I
 may insert my opinion. Of course I can, this is _my_ site!
 
-```scheme
+```racket
 (require racket/format)
 (require racket/flonum)
 
