@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>RNC — Writing</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png"><link rel="manifest" href="../site.webmanifest"><style>/* Alignment */
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Obfuscate Program — Robert Nate Crummett</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="C++ program to format text files for HTML."><link rel="canonical" href="https://robertcrummett.com/thoughts/obfuscate_program.html"><link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png"><link rel="manifest" href="../site.webmanifest"><style>pre { overflow-x: auto; }</style><style>/* Alignment */
 mtable.right-align mtd,
 mtable mtd.right-align,
 mtable.left-align mtd.right-align,
@@ -72,7 +72,7 @@ mover[accent="true" i] > :not(:first-child) {
   math-depth: inherit;
   math-style: inherit;
   math-shift: inherit;
-}</style></head><body><h3>Obfuscate Program</h3><p>The following program will replace characters in text files that may not display correctly in HTML files. I wrote it to make including code snippets in my website easier. In vim, you can read in the output of this command to the current line with the command <code>r!obfuscate.exe &lt;input></code>. The text file <code>&lt;input></code> will be printed (escaped) under the cursor location.</p><hr><p><strong>Program <code>obfuscate.cpp</code></strong></p><pre><code data-lang="cpp"><span style="color: #74747c">/*</span><span style="color: #74747c"> Escape characters in text files for HTML dislpay.</span>
+}</style></head><body><h1>Obfuscate Program</h1><p>The following program will replace characters in text files that may not display correctly in HTML files. I wrote it to make including code snippets in my website easier. In vim, you can read in the output of this command to the current line with the command <code>r!obfuscate.exe &lt;input></code>. The text file <code>&lt;input></code> will be printed (escaped) under the cursor location.</p><hr><p><strong>Program <code>obfuscate.cpp</code></strong></p><pre><code data-lang="cpp"><span style="color: #74747c">/*</span><span style="color: #74747c"> Escape characters in text files for HTML dislpay.</span>
 <span style="color: #74747c"> </span><span style="color: #74747c">*</span><span style="color: #74747c"> INTEL  icx obfuscate.cpp /Qstd:c++23 </span>
 <span style="color: #74747c"> </span><span style="color: #74747c">*</span><span style="color: #74747c"> GNU    g++ obfuscate.cpp -std=c++23  </span><span style="color: #74747c">*/</span>
 <span style="color: #d73948">#include</span> <span style="color: #198810">&lt;</span><span style="color: #198810">fstream</span><span style="color: #198810">></span>
@@ -160,4 +160,4 @@ int&amp;nbsp;main(int&amp;nbsp;argc,&amp;nbsp;char&amp;nbsp;**argv)&amp;nbsp;{&l
 &lt;br>
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;std::print("&amp;lt;code&amp;gt;\n{}&amp;lt;/code&amp;gt;",&amp;nbsp;s);&lt;br>
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;return&amp;nbsp;0;&lt;br>
-}&lt;br></code></pre></body></html>
+}&lt;br></code></pre><footer><hr><p>Robert Nate Crummett · Posted <time datetime="2026-01-17">1-17-26</time> · <a href="../index.html">Home</a></p></footer></body></html>

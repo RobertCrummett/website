@@ -5,7 +5,7 @@ My name is [Robert] Nate Crummett.
 I am a geophysics PhD student at the Colorado School of Mines.
 Currently I am fascinated by computers, math, and mineral
 exploration. I started at Mines after two years of field work
-for Zonge. My goal it to produce simple, effective solutions to
+for Zonge. My goal is to produce simple, effective solutions to
 complicated engineering problems in the mineral exploration landscape.
 
 = Links
