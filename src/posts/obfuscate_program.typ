@@ -6,6 +6,11 @@ can read in the output of this command to the current line with the command
 `r!obfuscate.exe <input>`.  The text file `<input>` will
 be printed (escaped) under the cursor location.
 
+*NOTE* Now that I have migrated the website to Typst, this program is no longer necessary.
+Simple code blocks will highlight and display code nicely on the website. However, I leave
+it here because it was a useful tool that I used before the website was modernized by AI.
+You might call it a relic of the good old days...
+
 #hr
 
 *Program `obfuscate.cpp`*
