@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Coordinate Transformations — First Order Systems of ODEs — Robert Nate Crummett</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Physical patterns emerge transforming coordinates of ODEs."><link rel="canonical" href="https://robertcrummett.com/thoughts/coordinate_transformations_odes.html"><link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16x16.png"><link rel="manifest" href="../site.webmanifest"><style>pre { overflow-x: auto; }</style><style>/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
+
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
+
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
+
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
+
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
+
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}</style></head><body><h1>Coordinate Transformations — First Order Systems of ODEs</h1><p>I just learned a new trick to transform systems of ordinary differential equations in Cartesian coordinates into polar coordinates. It is kind of basic, but leads to interesting physical interpretations, so I will record it here.</p><p>As everyone knows, <math><mi>𝑥</mi><mo>=</mo><mi>𝑟</mi><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">cos</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow></math> and <math><mi>𝑦</mi><mo>=</mo><mi>𝑟</mi><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">sin</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow></math>. We will use these formula below.</p><p>By definition <math><msup><mi>𝑟</mi><mn>2</mn></msup><mo>=</mo><msup><mi>𝑥</mi><mn>2</mn></msup><mo>+</mo><msup><mi>𝑦</mi><mn>2</mn></msup></math>. Taking the derivative with respect to time <math><mi>𝑡</mi></math>,</p><math display="block"><mn>2</mn><mi>𝑟</mi><mover accent="true"><mi>𝑟</mi><mo>̇</mo></mover><mo>=</mo><mn>2</mn><mi>𝑥</mi><mover accent="true"><mi>𝑥</mi><mo>̇</mo></mover><mo>+</mo><mn>2</mn><mi>𝑦</mi><mover accent="true"><mi>𝑦</mi><mo>̇</mo></mover><mspace width="1em"/><mo lspace="0em" rspace="0em" stretchy="false">⇒</mo><mspace width="1em"/><mi>𝑟</mi><mover accent="true"><mi>𝑟</mi><mo>̇</mo></mover><mo>=</mo><mi>𝑥</mi><mover accent="true"><mi>𝑥</mi><mo>̇</mo></mover><mo>+</mo><mi>𝑦</mi><mover accent="true"><mi>𝑦</mi><mo>̇</mo></mover><mi>.</mi></math><p>A formula for <math><mover accent="true"><mi>𝑟</mi><mo>̇</mo></mover></math>. We can derive a similar formula for <math><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover></math>. Differentiate the definitions of <math><mi>𝑥</mi></math> and <math><mi>𝑦</mi></math> with respect to <math><mi>𝑡</mi></math>:</p><math display="block"><mtable class="multiline-equation aligned"><mtr><mtd><mover accent="true"><mi>𝑥</mi><mo>̇</mo></mover></mtd><mtd><mo form="infix">=</mo><mover accent="true"><mi>𝑟</mi><mo>̇</mo></mover><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">cos</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo>−</mo><mi>𝑟</mi><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">sin</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow></mtd></mtr><mtr><mtd><mover accent="true"><mi>𝑦</mi><mo>̇</mo></mover></mtd><mtd><mo form="infix">=</mo><mover accent="true"><mi>𝑟</mi><mo>̇</mo></mover><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">sin</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo>+</mo><mi>𝑟</mi><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">cos</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo rspace="0em">,</mo></mtd></mtr></mtable></math><p>which follows from application of the product rule and chain rule. To isolate <math><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover></math>, we use a technique. We multiply the equation for <math><mover accent="true"><mi>𝑥</mi><mo>̇</mo></mover></math> by a term proportional to <math><mo lspace="0em" rspace="0.16666666666666666em">sin</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow></math>, and the equation for <math><mover accent="true"><mi>𝑦</mi><mo>̇</mo></mover></math> with a term proportional to <math><mo lspace="0em" rspace="0.16666666666666666em">cos</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow></math>. We do this so we can apply the well known identity <math><msup><mo lspace="0em" rspace="0.16666666666666666em">cos</mo><mn>2</mn></msup><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo>+</mo><msup><mo form="prefix" lspace="0em" rspace="0.16666666666666666em">sin</mo><mn>2</mn></msup><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo>=</mo><mn>1</mn></math>.</p><math display="block"><mtable class="multiline-equation aligned"><mtr><mtd><mover accent="true"><mi>𝑥</mi><mo>̇</mo></mover><mi>𝑦</mi></mtd><mtd><mo form="infix">=</mo><mover accent="true"><mi>𝑟</mi><mo>̇</mo></mover><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">cos</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mi>𝑟</mi><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">sin</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo>−</mo><msup><mi>𝑟</mi><mn>2</mn></msup><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover><msup><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">sin</mo><mn>2</mn></msup><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow></mtd></mtr><mtr><mtd><mover accent="true"><mi>𝑦</mi><mo>̇</mo></mover><mi>𝑥</mi></mtd><mtd><mo form="infix">=</mo><mover accent="true"><mi>𝑟</mi><mo>̇</mo></mover><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">sin</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mi>𝑟</mi><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">cos</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo>+</mo><msup><mi>𝑟</mi><mn>2</mn></msup><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover><msup><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">cos</mo><mn>2</mn></msup><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo rspace="0em">,</mo></mtd></mtr></mtable></math><p>Now, subtracting the two expressions allows us to isolate <math><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover></math> with the identity:</p><math display="block"><mtable class="multiline-equation aligned"><mtr><mtd><mover accent="true"><mi>𝑦</mi><mo>̇</mo></mover><mi>𝑥</mi><mo>−</mo><mover accent="true"><mi>𝑥</mi><mo>̇</mo></mover><mi>𝑦</mi></mtd><mtd><mo form="infix">=</mo><mover accent="true"><mi>𝑟</mi><mo>̇</mo></mover><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">sin</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mi>𝑟</mi><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">cos</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo>+</mo><msup><mi>𝑟</mi><mn>2</mn></msup><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover><msup><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">cos</mo><mn>2</mn></msup><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo>−</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>𝑟</mi><mo>̇</mo></mover><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">cos</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mi>𝑟</mi><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">sin</mo><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo>−</mo><msup><mi>𝑟</mi><mn>2</mn></msup><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover><msup><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">sin</mo><mn>2</mn></msup><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo stretchy="false">)</mo></mrow></mtd></mtr><mtr><mtd></mtd><mtd><mo form="infix">=</mo><msup><mi>𝑟</mi><mn>2</mn></msup><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover><msup><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">cos</mo><mn>2</mn></msup><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo>+</mo><msup><mi>𝑟</mi><mn>2</mn></msup><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover><msup><mo form="prefix" lspace="0.16666666666666666em" rspace="0.16666666666666666em">sin</mo><mn>2</mn></msup><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow></mtd></mtr><mtr><mtd></mtd><mtd><mo form="infix">=</mo><msup><mi>𝑟</mi><mn>2</mn></msup><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover><mrow><mo stretchy="false">(</mo><msup><mo form="prefix" lspace="0em" rspace="0.16666666666666666em">cos</mo><mn>2</mn></msup><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo>+</mo><msup><mo form="prefix" lspace="0em" rspace="0.16666666666666666em">sin</mo><mn>2</mn></msup><mrow><mo stretchy="false">(</mo><mi>𝜃</mi><mo stretchy="false">)</mo></mrow><mo stretchy="false">)</mo></mrow></mtd></mtr><mtr><mtd></mtd><mtd><mo form="infix">=</mo><msup><mi>𝑟</mi><mn>2</mn></msup><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover><mi>.</mi></mtd></mtr></mtable></math><p>Relatively simple combinations of the original expressions in terms of <math><mi>𝑥</mi></math>, <math><mi>𝑦</mi></math>, <math><mover accent="true"><mi>𝑥</mi><mo>̇</mo></mover></math>, and <math><mover accent="true"><mi>𝑦</mi><mo>̇</mo></mover></math> yield simple expressions in polar coordinates. The term <math><msup><mi>𝑟</mi><mn>2</mn></msup><mover accent="true"><mi>𝜃</mi><mo>̇</mo></mover></math> bears similarity to the <math><mi>𝑧</mi></math>-component of a cross product <math><mover accent="true"><mi>𝑟</mi><mo stretchy="true">⃗</mo></mover><mo lspace="0.2222222222222222em" rspace="0.2222222222222222em">×</mo><mover accent="true"><mi>𝑣</mi><mo stretchy="true">⃗</mo></mover></math>, where <math><mover accent="true"><mi>𝑟</mi><mo stretchy="true">⃗</mo></mover></math> is the position vector and <math><mover accent="true"><mi>𝑣</mi><mo stretchy="true">⃗</mo></mover></math> is the velocity vector. The term <math><mi>𝑟</mi><mover accent="true"><mi>𝑟</mi><mo>̇</mo></mover></math> bears similarity to a dot product <math><mover accent="true"><mi>𝑟</mi><mo stretchy="true">⃗</mo></mover><mo lspace="0.2222222222222222em" rspace="0.2222222222222222em">⋅</mo><mover accent="true"><mi>𝑣</mi><mo stretchy="true">⃗</mo></mover></math>. These are fascinating similarities to me.</p><footer><hr><p>Robert Nate Crummett · Posted <time datetime="2026-10-14">10-14-26</time> · <a href="../index.html">Home</a></p></footer></body></html>
