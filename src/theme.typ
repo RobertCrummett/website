@@ -29,6 +29,23 @@
   body
 }
 
+// Typst writes dot() and dot.double() with combining dot characters, which
+// Chrome draws to the left of the letter (w3c/mathml-core#311). The spacing
+// forms, which the MathML spec lists as equivalents, sit centered. Other
+// accents keep Typst's characters: the spacing arrow, for one, looks worse.
+#let spacing-dots = ("\u{307}": "\u{2D9}", "\u{308}": "\u{A8}")
+#let centered-dots(body) = {
+  show math.accent: it => if it.accent in spacing-dots {
+    // Otherwise mirror Typst's own <mover>: group a multi-part base, and keep
+    // the class that stops a `dotless: false` base from losing its dot.
+    let attrs = (accent: "true")
+    if not it.at("dotless", default: true) { attrs.insert("class", "dotted") }
+    let base = if it.base.has("children") { html.elem("mrow", it.base) } else { it.base }
+    html.elem("mover", attrs: attrs, base + [#symbol(spacing-dots.at(it.accent))])
+  } else { it }
+  body
+}
+
 // Horizontal rule, for use in posts: #hr
 #let hr = html.elem("hr")
 
@@ -51,11 +68,13 @@
       #html.elem("link", attrs: (rel: "icon", type: "image/png", sizes: "16x16", href: prefix + "icons/favicon-16x16.png"))
       #html.elem("link", attrs: (rel: "manifest", href: prefix + "site.webmanifest"))
       // Long code lines scroll inside their block instead of widening the
-      // whole page on a phone.
-      #html.elem("style")[pre { overflow-x: auto; }]
+      // whole page on a phone. Accents (dots, hats; not stretchy arrows) get
+      // a little air above the letter, which Windows' math font leaves out.
+      #html.elem("style", "pre { overflow-x: auto; }\nmover[accent=\"true\" i] > mo:last-child:not([stretchy]) { padding-bottom: 0.1em; }")
     ]
     #html.elem("body")[
       #show: tight-delimiters
+      #show: centered-dots
       #if heading != none [#html.elem("h1")[#heading]]
       #body
       #if footer != none [#html.elem("footer")[#hr #html.elem("p")[#footer]]]
