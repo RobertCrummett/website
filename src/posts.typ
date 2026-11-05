@@ -40,9 +40,4 @@
    summary: "Brief coverage of convex functions."),
   (id: "probability_theory_algebras", title: "Probability Theory — Algebras", date: "1-4-26",
    summary: "Simple results concerning algebras."),
-  // Published but never listed on the index.
-  (id: "analytic_functions", title: "Analytic Functions", listed: false),
-  (id: "averaging_spectra", title: "Averaging Spectra", listed: false),
-  (id: "luke_22", title: "Luke 22", listed: false),
-  (id: "orogenic_gold_deposits", title: "Orogenic Gold Deposits", listed: false),
 )
