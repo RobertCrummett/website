@@ -1,4 +1,4 @@
-Weierstrass's M-test is a way to garuntee an infinite series of functions
+Weierstrass's M-test is a way to guarantee an infinite series of functions
 converges absolutely and uniformly. The M-test is important, because convergence
 in one of these modes does not necessarily imply convergence in the other.
 
@@ -21,8 +21,7 @@ $ S(x) = sum_(n=1)^oo f_(n)(x) $
 
 converges absolutely and uniformly on the set $E$. That is the entire result:
 if we can find a sequence of real numbers that converge and provide a constant upper
-bound for each $f_(n)(x)$ on $E$, then we get very powerful convergence proprties.
-These properties are defined next.
+bound for each $f_(n)(x)$ on $E$, then we get very powerful convergence properties.
 
 == Absolute Convergence
 
@@ -57,15 +56,15 @@ us to say the entire function over $E$ is getting closer to the limit.
 
 = Passing Thoughts
 
-The Weierstrass's M-test seems to me similiar in spirit to Lebesgue's dominated
+The Weierstrass's M-test seems to me similar in spirit to Lebesgue's dominated
 convergence theorem. Above, Weierstrass is concerned primarily by the convergence
 of infinite series of functions. In contrast, Lebesgue's celebrated theorem is about
 swapping limits and integrals in measure theory. So they really are different, but
 the machinery in both seems to be the same.
 
 Both theorems take wild sequences of $(f_n)$ and seek a tamer alternative over $E$.
-Lebesgue requires an integrable function $g(x)$, which needs to be larger than $|f_n(x)|$.
-Weierstrass requires a numeric sequence $M_n$, which is greater or equal to $|f_n(x)|$.
+Lebesgue requires an integrable function $g(x)$, which needs to be larger than $|f_(n)(x)|$.
+Weierstrass requires a numeric sequence $M_n$, which is greater or equal to $|f_(n)(x)|$.
 Lebesgue's dominating function is independent of $n$; Weierstrass's M is independent of
 $x$; both are simpler than their original sequence, and are greater to or equal to the
 elements of the sequence in question.
