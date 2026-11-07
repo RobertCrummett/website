@@ -1,35 +1,43 @@
-Markov's inequality places an upper bound on the probability that a non-negative
-random variable will be greater than a fixed value. Actually, this is a special
-case of the more general form of the inequality: Markov is capable of
-placing an upper bound on the probability that a non-negative *function*
-of a random variable will be greater than a fixed value. This is very useful
-when we are interested in estimating the worst-case scenario that a non-negative
-random variable exceeds a value.
+Most inequalities in the thoery of probability follow from Markov's inequality.
+It is a fundamental starting point for other results, so it pays to know it
+carefully.
 
-Formally, Markov's inequality states that the probability that a non-negative
-random variable exceeds a fixed value is less than or equal to the expectation
-of the random variable divided by the fixed value. If there is a non-negative
-function of a random variable involved, the definition changes just slightly:
-the probability that a non-negative function of a random variable exceeds a
-fixed value is less than or equal to the expectation of the non-negative function
-divided by the fixed value. Let's see how this upper bound works in practice,
-with this example taken from Wikipedia:
+= Markov's Inequality
 
-Imagine everyone has a (non-negative) income. Markov's inequality informs
-us that no more than ten percent of the population can make more than ten times
-the average income. The non-negative random variable in this situation is the
-income. The expectation of the income is just the average income. And the fixed
-value in this case is ten times the average income. Dividing the expectation of
-the income by the fixed value (ten times the expectation of the income) yields
-one tenth, or ten percent, as an upper bound.
+Let $Z$ be a random variable, $Z >= 0$ almost surely. For all $t > 0$,
+ 
+$ bb(P)(Z >= t) <= (bb(E) Z) / t. $
 
-In the example above, there was no non-negative function applied to the random
-variable. But we could apply one to the random variable, and Markov's inequality
-would still apply.
+This proof I learned from John Duchi of Stanford. By definition, $bb(P)(Z >= t)
+= bb(E) bb(I)_({Z >= t})$. The key here is to notice that $Z slash t >=
+bb(I)_({Z >= t})$ for all $Z >= 0$ and $t > 0$. Consider the case $Z slash t >=
+1$ and $Z slash t < 1$, and the result follows. Thus $bb(E) bb(I)_({Z >= t}) <=
+bb(E)(Z slash t) = bb(E) Z slash t$, the result. $qed$
 
-In practice, people often invoke Markov's inequality when they want to place an
-upper bound on the probability a non-negative random variable can exceed a fixed
-value. When showing convergence, this can be useful tool to show that the
-upper bound of the magnitude of the difference of two random variables is zero.
-Note the magnitude of the difference between two random variables is a non-negative
-function.
+What is so powerful about this? What I have observed is that folks leverage
+this inequality in one chief way: transformations. Given some transform $f$
+which maps to the positive reals, it follows $bb(P)(f(Z) >= f(t)) <= bb(E) f(Z)
+slash f(t)$. For instance, observe the next example --- it is really nothing
+more than Markov's inequality dressed up pretty.
+
+= Chebyshev's Inequality
+
+#let Var = math.op("Var") /* variance operator */
+
+Let $Z in cal(L)^2$ (i.e. $Var(Z)$ is finite). Then
+
+$ bb(P)(Z >= bb(E) Z + t quad "or" quad Z <= bb(E) Z - t) <= Var(Z) / t^2. $
+
+Whoa! Is that really Markov's inequality? Sure is. Notice we did not require $Z
+>= 0$. We use the trick mentioned above:
+
+$ bb(P)(Z >= bb(E) Z + t quad "or" quad Z <= bb(E) Z - t) = bb(P)((Z - bb(E) Z)^2 >= t^2 ). $
+
+Now it is clear we are dealing with a non-negative random variable. For $t^2 >
+0$, we invoke Markov's ineqality and $Z in cal(L)^2$ to see the famous result
+in a new light
+
+$ bb(P)((Z - bb(E) Z)^2 >= t^2 ) <= ( bb(E) (Z - bb(E) Z)^2 ) / t^2 = Var(Z) / t^2. quad qed $
+
+So we see that Chebyshev's inequality follows directly from Markov's
+inequality.
