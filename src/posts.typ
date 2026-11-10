@@ -2,6 +2,8 @@
 // src/posts/ and in thoughts/ (id.typ -> thoughts/id.html).
 // Set `listed: false` to publish a page without listing it on the index.
 #let posts = (
+  (id: "probability_theory_hoeffdings_inequality", title: "Hoeffding's Inequality", date: "11-7-26",
+   summary: "A basic proof, and intuition about his inequality and lemma."),
   (id: "weierstrass_m_test", title: "Weierstrass's M-test", date: "11-6-26",
    summary: "Statement of the technique, and thoughts about relationship to dominated convergence."),
   (id: "picard_iteration", title: "Picard Iteration and Integral Equations", date: "10-22-26",
