@@ -68,14 +68,20 @@
       #html.elem("link", attrs: (rel: "icon", type: "image/png", sizes: "32x32", href: prefix + "icons/favicon-32x32.png"))
       #html.elem("link", attrs: (rel: "icon", type: "image/png", sizes: "16x16", href: prefix + "icons/favicon-16x16.png"))
       #html.elem("link", attrs: (rel: "manifest", href: prefix + "site.webmanifest"))
-      // Long code lines scroll inside their block instead of widening the
-      // whole page on a phone. Accents (dots, hats; not stretchy arrows) get
-      // a little air above the letter, which Windows' math font leaves out.
-      #html.elem("style", "pre { overflow-x: auto; }\nmover[accent=\"true\" i] > mo:last-child:not([stretchy]) { padding-bottom: 0.1em; }")
+      // Long code lines and wide display equations scroll inside their block
+      // instead of widening the whole page on a phone. A scrolling box clips
+      // whatever pokes out of it, and fractions and sums reach a few pixels
+      // past the equation's box, so give them room without moving the
+      // equation. Accents (dots, hats; not stretchy arrows) get a little air
+      // above the letter, which Windows' math font leaves out.
+      #html.elem("style", "pre, div.equation { overflow-x: auto; }\ndiv.equation { padding: 0.5em 0; margin: -0.5em 0; }\nmover[accent=\"true\" i] > mo:last-child:not([stretchy]) { padding-bottom: 0.1em; }")
     ]
     #html.elem("body")[
       #show: tight-delimiters
       #show: centered-dots
+      // Safari sizes <math> to its content and ignores overflow on it, so
+      // each display equation gets a <div> to scroll in.
+      #show math.equation.where(block: true): it => html.elem("div", attrs: (class: "equation"), it)
       #if heading != none [#html.elem("h1")[#heading]]
       #body
       #if footer != none [#html.elem("footer")[#hr #html.elem("p")[#footer]]]
