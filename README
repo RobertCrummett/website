@@ -10,13 +10,29 @@ mistakes. Critically evaluate the information on this site.
                      The Organization
 ============================================================
 
-The ./index.html gathering place of all thoughts.
-But thoughts live in the ./thoughts/ directory.
-Everything else is irrelevant.
+Write a post in ./posts/ (Typst) that starts with a meta block:
 
-The pages are generated. Write posts in ./src/posts/ (Typst),
-list them in ./src/posts.typ, then run ./build.sh to regenerate
-./index.html and ./thoughts/*.html. Needs typst >= 0.15.
+    #let meta = (
+      title: "Convex Functions",
+      date: "1-7-26",
+      summary: "Brief coverage of convex functions.",
+    )
+
+and it appears on the site as /convex_functions.html, listed on
+the home page. No meta block means it is a draft and is skipped;
+`draft: true` does the same, and `listed: false` publishes the
+page but leaves it off the home page.
+
+./index.typ    the home page bio and links
+./theme.typ    page chrome and helpers (#hr) shared by posts
+./site.typ     ties it together: finds the posts, builds every page
+
+Netlify runs ./build.sh on every push and publishes ./_site/,
+so generated HTML is never committed. Locally (typst >= 0.15):
+
+    ./build.sh                 build the site into ./_site/
+    ./build.sh watch           rebuild ./_site/ on every save
+    ./build.sh pdf POST.typ    live PDF preview of one post
 
 
                          The License
