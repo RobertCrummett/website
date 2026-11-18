@@ -58,14 +58,16 @@ Let $Z in cal(L)^1$ an $t >= 0$. Then
 $ bb(P)(Z >= bb(E) Z + t) <= min_(lambda >= 0) M_(Z - bb(E) Z)(lambda) e^(-lambda t), $
 
 where $M_(Z - bb(E) Z)(lambda)$ is the moment generating function of $Z - bb(E) Z$,
+which is defined as
 
-$ M_(X)(lambda) = bb(E)[e^(-lambda X)], $
+$ M_(Z)(s) = bb(E)[e^(-s Z)] quad s >= 0. $
 
-which can be identified as a linear combination of Laplace transform. I have
-also heard it called a _double sided_ Laplace transform. Unlike the
-characteristic function, the moment generating function is not garunteed to
-exist. The integrand must decay sufficiently fast.
+The moment generating function can be identified as a linear combination of
+Laplace transform. I have also heard it called a _double sided_ Laplace
+transform. Unlike the characteristic function, the moment generating function
+is not garunteed to exist. The integrand must decay sufficiently fast.
 
 Proof of the above follows by application of $f(x) = e^(-lambda x)$ with
-$lambda >= 0$ and invokation of Markov's inequality. Since $lambda$ is a free
-parameter, we are free to minimize it to find the tightest bound possible.
+$lambda >= 0$ and subsequent invokation of Markov's inequality. Since $lambda$
+is a free parameter, we are free to minimize it to find the tightest bound
+possible.
