@@ -1,0 +1,17 @@
+# Netlify builds the site from the Typst sources on every push and publishes
+# _site/; the generated HTML is not committed.
+[build]
+  publish = "_site"
+  command = """
+    curl -fsSL https://github.com/typst/typst/releases/download/v$TYPST_VERSION/typst-x86_64-unknown-linux-musl.tar.xz | tar -xJ -C "$HOME" &&
+    PATH="$HOME/typst-x86_64-unknown-linux-musl:$PATH" sh ./build.sh
+  """
+
+[build.environment]
+  TYPST_VERSION = "0.15.1"   # keep in step with `typst --version` locally
+
+# Posts used to live under /thoughts/; keep old links and search results working.
+[[redirects]]
+  from = "/thoughts/*"
+  to = "/:splat"
+  status = 301
