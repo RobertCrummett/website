@@ -19,9 +19,16 @@ Write a post in ./posts/ (Typst) that starts with a meta block:
     )
 
 and it appears on the site as /convex_functions.html, listed on
-the home page. No meta block means it is a draft and is skipped;
-`draft: true` does the same, and `listed: false` publishes the
-page but leaves it off the home page.
+the home page (`listed: false` publishes the page but leaves it
+off). Unfinished posts go in ./drafts/, which is committed and
+pushed but never built or published; to publish one, move it
+into ./posts/ (git mv drafts/x.typ posts/).
+
+Before every push, hooks/pre-push builds the site and looks for
+leftover merge-conflict markers. If either fails the push stops
+and the error is printed with its file and line. Running
+./build.sh once switches this on in each clone; skip it once
+with `git push --no-verify`.
 
 ./index.typ    the home page bio and links
 ./theme.typ    page chrome and helpers (#hr) shared by posts
@@ -32,7 +39,7 @@ so generated HTML is never committed. Locally (typst >= 0.15):
 
     ./build.sh                 build the site into ./_site/
     ./build.sh watch           rebuild ./_site/ on every save
-    ./build.sh pdf POST.typ    live PDF preview of one post
+    ./build.sh pdf FILE.typ    live PDF preview of a post or draft
 
 
                          The License
