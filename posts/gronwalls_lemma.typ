@@ -1,3 +1,9 @@
+#let meta = (
+  title: "Gronwall's Lemma",
+  date: "11-17-26",
+  summary: "Two proofs of this differential inequality.",
+)
+
 I had to use this lemma in a recent homework assignment. My professor is
 emailing me, trying to prompt me to finish the task. I am three weeks late, and
 still have not proved the first question. The teacher seems to understand I am

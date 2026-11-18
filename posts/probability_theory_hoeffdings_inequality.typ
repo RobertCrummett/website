@@ -1,3 +1,9 @@
+#let meta = (
+  title: "Probability Theory — Hoeffding's Inequality [TO BE WRITTEN]",
+  date: "12-02-26", /* PLACEHOLDER */
+  summary: "This just so happened to come up in research the other day.",
+)
+
 The Hoeffding's lemma came up in my research last week. While
 I was familiar by name, I was not familiar by experience; this
 is a more and more familiar feeling with agentic AI nowadays.
@@ -29,4 +35,3 @@ side is called the remainder term of the Taylor expansion. Notice
 $ psi_(X)(s) = log 1 = 0 quad "and" quad psi^prime_(X)(s) = $
 
 TBW.
-
