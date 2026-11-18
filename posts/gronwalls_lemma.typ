@@ -1,12 +1,9 @@
-<<<<<<< HEAD:src/posts/gronwalls_lemma.typ
-=======
 #let meta = (
   title: "Gronwall's Lemma",
   date: "11-17-26",
   summary: "Two proofs of this differential inequality.",
 )
 
->>>>>>> reconcile:posts/gronwalls_lemma.typ
 I had to use this lemma in a recent homework assignment. My professor is
 emailing me, trying to prompt me to finish the task. I am three weeks late, and
 still have not proved the first question. The teacher seems to understand I am
@@ -67,7 +64,7 @@ so. I just would not have invented the bound like this myself.
 Let $G(t) = C + K integral_0^t g(s) dif s$. Now it follows that $0 < G(t)$ and
 $g(t) <= G(t)$.
 
-$ (G^(prime)(t)) / G(t) = (K g(t)) / G(t) <= (K G(t)) / G(t) = K $
+$ (G'(t)) / G(t) = (K g(t)) / G(t) <= (K G(t)) / G(t) = K $
 
 The second step follows by invokation of the fundamental theorem of calculus.
 But notice the first ratio is the logarithmic derivative, so it follows that

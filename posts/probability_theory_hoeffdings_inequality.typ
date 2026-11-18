@@ -1,12 +1,9 @@
-<<<<<<< HEAD:src/posts/probability_theory_hoeffdings_inequality.typ
-=======
 #let meta = (
   title: "Probability Theory — Hoeffding's Inequality [TO BE WRITTEN]",
   date: "12-02-26", /* PLACEHOLDER */
   summary: "This just so happened to come up in research the other day.",
 )
 
->>>>>>> reconcile:posts/probability_theory_hoeffdings_inequality.typ
 The Hoeffding's lemma came up in my research last week. While
 I was familiar by name, I was not familiar by experience; this
 is a more and more familiar feeling with agentic AI nowadays.
@@ -30,15 +27,11 @@ These functions are also known as cumulant generating functions. We can allow
 $bb(E) X = 0$ without loss of generality below. Taking a Taylor expansion
 around $s = 0$,
 
-$ psi_(X)(s) = psi_(X)(0) + s psi^prime_(X)(0) + s^2 / 2 psi^(prime prime)_(X)(c) $
+$ psi_(X)(s) = psi_(X)(0) + s psi'_(X)(0) + s^2 / 2 psi''_(X)(c) $
 
 where $c$ is some point in between $0$ and $s$. The last term on the right hand
 side is called the remainder term of the Taylor expansion. Notice
 
-$ psi_(X)(s) = log 1 = 0 quad "and" quad psi^prime_(X)(s) = $
+$ psi_(X)(s) = log 1 = 0 quad "and" quad psi'_(X)(s) = $
 
 TBW.
-<<<<<<< HEAD:src/posts/probability_theory_hoeffdings_inequality.typ
-
-=======
->>>>>>> reconcile:posts/probability_theory_hoeffdings_inequality.typ
