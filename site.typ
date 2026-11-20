@@ -1,11 +1,11 @@
 // Whole-site entry point. Build with ./build.sh (see README).
 #import "theme.typ": page, posted, site-name
 
-// Posts, newest first. build.sh passes the ids of every posts/*.typ that
-// begins with a `#let meta = (...)` block; here we read those blocks.
+// Posts, newest first. build.sh passes the id of every posts/*.typ, and each
+// of those begins with a `#let meta = (...)` block that we read here.
 //   meta fields: title, date ("M-D-YY"), summary,
-//                listed: false  -> publish the page but leave it off the index,
-//                draft: true    -> do not publish at all.
+//                listed: false  -> publish the page but leave it off the index.
+// Unfinished posts live in drafts/, which is never built.
 #let ids = sys.inputs.at("posts", default: "").split(",").filter(id => id != "")
 
 // "11-6-26" -> (26, 11, 6), so posts sort by year, then month, then day.
@@ -19,7 +19,6 @@
     import "posts/" + id + ".typ": meta
     (id: id, ..meta)
   })
-  .filter(p => not p.at("draft", default: false))
   .sorted(key: p => date-key(p.date))
   .rev())
 
