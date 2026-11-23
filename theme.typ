@@ -46,6 +46,28 @@
   body
 }
 
+// Typst writes f' as a superscript, <msup><mi>f</mi><mo>′</mo></msup>, but a
+// font's prime character is already drawn raised and small, like an
+// apostrophe, so as a superscript it lands too high and too small (seen in
+// Edge). Set the prime straight after its letter instead, as in plain text
+// and in Typst's PDF. Any other scripts (f'^2, y'_n) attach to the pair;
+// subscripts then sit after the prime, not under it.
+#let prime-chars = ("′", "″", "‴", "⁗")
+#let is-primes(c) = type(c) == content and (c.func() == math.primes
+  or (c.has("text") and c.text.clusters().all(ch => ch in prime-chars)))
+#let inline-primes(body) = {
+  show math.attach: it => {
+    let key = ("tr", "t").find(k => is-primes(it.at(k, default: none)))
+    if key == none { return it }
+    let base = html.elem("mrow", it.base + it.at(key))
+    let scripts = it.fields()
+    let _ = scripts.remove("base")
+    let _ = scripts.remove(key)
+    if scripts.len() == 0 { base } else { math.attach(base, ..scripts) }
+  }
+  body
+}
+
 // Horizontal rule, for use in posts: #hr. A <hr> on the site, and a plain line
 // when a post is compiled on its own to PDF for previewing.
 #let hr = context if target() == "html" { html.elem("hr") } else { line(length: 100%) }
@@ -79,6 +101,7 @@
     #html.elem("body")[
       #show: tight-delimiters
       #show: centered-dots
+      #show: inline-primes
       // Safari sizes <math> to its content and ignores overflow on it, so
       // each display equation gets a <div> to scroll in.
       #show math.equation.where(block: true): it => html.elem("div", attrs: (class: "equation"), it)
