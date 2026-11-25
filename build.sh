@@ -4,6 +4,8 @@
 # with a `#let meta = (...)` block; drafts/ is never built. Netlify runs this
 # on every push and publishes _site/.
 # Usage: ./build.sh [output-dir]     (default: _site)
+#        NOFIX=name,... ./build.sh  build without those fixes from fixes.typ
+#                                    (NOFIX=all for none of them)
 #        ./build.sh watch            rebuild _site/ on every save
 #        ./build.sh pdf POST         live PDF preview of one post, e.g.
 #                                    ./build.sh pdf drafts/my_next_post.typ
@@ -41,9 +43,9 @@ out="_site"
 [ "$1" = watch ] || out="${1:-_site}"
 mkdir -p "$out"
 rm -f "$out"/*.html   # so deleted posts disappear
-cp -r icons fonts favicon.ico site.webmanifest "$out"/
+cp -r icons fonts favicon.ico site.webmanifest "$out"/ || exit 1
 
 if [ "$1" = watch ]; then
-    exec typst watch --features html,bundle -f bundle --input posts="$posts" site.typ "$out"
+    exec typst watch --features html,bundle -f bundle --input posts="$posts" --input nofix="$NOFIX" site.typ "$out"
 fi
-exec typst compile --features html,bundle -f bundle --input posts="$posts" site.typ "$out"
+exec typst compile --features html,bundle -f bundle --input posts="$posts" --input nofix="$NOFIX" site.typ "$out"
