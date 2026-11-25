@@ -28,15 +28,19 @@
 )
 
 // --- math-size --------------------------------------------------------------
-// In the PDFs a math letter stands as tall as the text around it. The math
-// font's x-height is 0.431 em, about that of Times on Windows and Mac, but
-// Android's text font, Noto Serif, is 0.536 em, so there all math looked a
-// fifth too small. Size each equation to the x-height of the text around it
-// (1ex, in font-size, is the surrounding text's); nothing else changes.
+// In the PDFs math stands about as tall as the text around it. The math
+// font (x-height 0.431 em, capitals 0.683 em) is proportioned much like
+// Times on Windows and Mac, but Android's text font, Noto Serif, has tall
+// lowercase (0.536 em) for its capitals (0.715 em): at the same font size
+// math looked a fifth too small there, and sized to match the lowercase,
+// its capitals, digits and brackets stood 10-15% too tall. So each equation
+// is sized halfway between matching the surrounding text's lowercase (1ex)
+// and its capitals (1cap); nothing else changes. Browsers without the cap
+// unit take the lowercase match.
 // Keep while the text font is left to the browser.
 #let math-size = (
   name: "math-size",
-  css: prefix => "math { font-size: calc(1ex / 0.431); }",
+  css: prefix => "math { font-size: calc(1ex / 0.431); font-size: calc((1ex / 0.431 + 1cap / 0.683) / 2); }",
 )
 
 // --- tight-delimiters -------------------------------------------------------
