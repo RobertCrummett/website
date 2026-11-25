@@ -212,6 +212,36 @@
   css: prefix => "mrow.scripts > :is(msub, msubsup) > :nth-child(2) { margin-left: var(--sub-x); position: relative; top: var(--sub-y); }\nmrow.scripts > msup > :nth-child(2), mrow.scripts > msubsup > :nth-child(3) { margin-left: var(--sup-x); position: relative; top: var(--sup-y); }",
 )
 
+// --- lone-bars --------------------------------------------------------------
+// Typst pairs brackets into groups but never bars: |x| is two lone bars. A
+// lone bar is stretchy, and WebKit (Safari) stretches it to the tallest
+// thing on its line: beside a display sum, the sum's full height with its
+// limits. Chrome leaves it be. Typst writes a bracket that opens or closes
+// outside a group as non-stretchy, so each lone bar is classed as one: in
+// an equation's run of lone bars, the odd ones open and the even ones
+// close, as in |x| + |y|, which also keeps Typst's spacing. Bars of a group
+// Typst did make, as in abs(x) or lr(|...|), are left to stretch.
+// Drop once Typst writes lone bars as non-stretchy, or pairs them.
+#let lone-bar-count = state("lone-bars", 0)
+#let lone-bars = (
+  name: "lone-bars",
+  rule: body => {
+    show math.equation: eq => {
+      show regex("[|‖]"): bar => if bar.at("label", default: none) == <grouped-bar> { bar } else {
+        lone-bar-count.update(n => n + 1)
+        context math.class(if calc.odd(lone-bar-count.get()) { "opening" } else { "closing" }, bar)
+      }
+      show math.lr: group => {
+        let parts = if group.body.has("children") { group.body.children } else { () }
+        let bar-ends = parts.len() > 0 and parts.first().at("text", default: none) in ("|", "‖")
+        if bar-ends { show regex("[|‖]"): bar => [#bar<grouped-bar>]; group } else { group }
+      }
+      lone-bar-count.update(0) + eq
+    }
+    body
+  },
+)
+
 // The fixes in use. Comment out or delete a line to pull one out.
 #let fixes = (
   math-font,
@@ -220,6 +250,7 @@
   accents,
   inline-primes,
   scripts,
+  lone-bars,
 )
 
 #let off = sys.inputs.at("nofix", default: "").split(",").map(str.trim).filter(s => s != "")
