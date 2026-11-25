@@ -33,6 +33,8 @@ with `git push --no-verify`.
 ./index.typ    the home page bio and links
 ./theme.typ    page chrome and helpers (#hr) shared by posts
 ./site.typ     ties it together: finds the posts, builds every page
+./fonts/       New Computer Modern Math (GUST Font License), the
+               math font of Typst's PDFs, from typst-assets 0.15.1
 
 Netlify runs ./build.sh on every push and publishes ./_site/,
 so generated HTML is never committed. Locally (typst >= 0.15):

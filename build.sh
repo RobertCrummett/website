@@ -41,7 +41,7 @@ out="_site"
 [ "$1" = watch ] || out="${1:-_site}"
 mkdir -p "$out"
 rm -f "$out"/*.html   # so deleted posts disappear
-cp -r icons favicon.ico site.webmanifest "$out"/
+cp -r icons fonts favicon.ico site.webmanifest "$out"/
 
 if [ "$1" = watch ]; then
     exec typst watch --features html,bundle -f bundle --input posts="$posts" site.typ "$out"

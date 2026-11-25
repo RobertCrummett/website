@@ -16,11 +16,17 @@
 // Browsers render a bare <mo>(</mo> as a stretchy fence: a taller glyph with
 // extra side spacing, so f(x) looks like f ( x ). Typst marks every
 // delimiter group `lr` as stretchy, so unwrap the groups that don't need it.
-// Groups around tall content (fractions, roots, matrices) keep scaling.
-#let tall-funcs = (math.frac, math.binom, math.sqrt, math.root, math.mat, math.vec, math.cases)
+// Groups around tall content (fractions, roots, matrices, braces, integrals,
+// sums, and limits set below like lim_(n -> oo)) keep scaling.
+#let tall-funcs = (math.frac, math.binom, math.sqrt, math.root, math.mat, math.vec, math.cases,
+  math.underbrace, math.overbrace, math.underbracket, math.overbracket)
+#let big-ops = "∫∬∭∮∯∰∱∲∳⨌⨍⨎⨏⨐⨑⨒⨓⨔⨕⨖⨗⨘⨙⨚⨛⨜∑∏∐⋀⋁⋂⋃⨀⨁⨂⨃⨄⨅⨆"
 #let is-tall(c) = {
   if type(c) == content {
     if c.func() in tall-funcs { return true }
+    if c.has("text") and type(c.text) == str and c.text.clusters().any(ch => ch in big-ops) { return true }
+    if c.func() == math.attach and (c.has("t") or c.has("b")) and (c.base.func() == math.limits
+      or (c.base.func() == math.op and c.base.at("limits", default: false))) { return true }
     c.fields().values().any(is-tall)
   } else if type(c) == array { c.any(is-tall) } else { false }
 }
@@ -96,6 +102,11 @@
       // past the equation's box, so give them room without moving the
       // equation. Accents (dots, hats; not stretchy arrows) get a little air
       // above the letter, which Windows' math font leaves out.
+      // Math is set in New Computer Modern Math, the font of Typst's PDFs.
+      // Browsers need a font made for math (one with an OpenType MATH table)
+      // to draw display-size integrals, stretch brackets and place scripts,
+      // and Android ships none, so the site brings its own.
+      #html.elem("style", "@font-face { font-family: \"New Computer Modern Math\"; src: url(\"" + prefix + "fonts/NewCMMath-Book.woff\") format(\"woff\"); }\nmath { font-family: \"New Computer Modern Math\", math; }")
       #html.elem("style", "pre, div.equation { overflow-x: auto; }\ndiv.equation { padding: 0.5em 0; margin: -0.5em 0; }\nmover[accent=\"true\" i] > mo:last-child:not([stretchy]) { padding-bottom: 0.1em; }")
     ]
     #html.elem("body")[
