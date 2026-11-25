@@ -41,7 +41,12 @@
 // the bracket to the next size up and pad it, so f(x) looks like f ( x ).
 // Unwrap the groups that don't need to grow. Groups around tall content
 // (fractions, roots, matrices, braces, integrals, sums, and limits set below
-// like lim_(n -> oo)) keep scaling.
+// like lim_(n -> oo)) keep scaling. A group in brackets is handed over as
+// its two brackets around an <mrow> of the rest: Typst writes a lone bracket
+// as non-stretchy and spaces it the way it spaces the group (cos(θ), not
+// cos (θ)). Bars get no such mark and stretch to whatever holds them, so
+// they are kept inside an <mrow>: the rest of a bracket group, or the
+// whole group when bars are its ends, as in |x|.
 // Typst's PDF allows a bracket to fall a little short of its contents; drop
 // this once its HTML export does the same.
 #let tall-funcs = (math.frac, math.binom, math.sqrt, math.root, math.mat, math.vec, math.cases,
@@ -56,10 +61,19 @@
     c.fields().values().any(is-tall)
   } else if type(c) == array { c.any(is-tall) } else { false }
 }
+#let opening = ("(", "[", "{", "⟨", "⌊", "⌈", "⟦", "⦃", "⟮")
+#let closing = (")", "]", "}", "⟩", "⌋", "⌉", "⟧", "⦄", "⟯")
 #let tight-delimiters = (
   name: "tight-delimiters",
   rule: body => {
-    show math.lr: it => if is-tall(it.body) { it } else { html.elem("mrow", it.body) }
+    show math.lr: it => {
+      if is-tall(it.body) { return it }
+      let parts = if it.body.has("children") { it.body.children } else { () }
+      let bracketed = parts.len() >= 2 and parts.first().has("text") and parts.last().has("text") and parts.first().text in opening and parts.last().text in closing
+      if not bracketed { return html.elem("mrow", it.body) }
+      let inside = parts.slice(1, -1).join()
+      parts.first() + (if inside != none { html.elem("mrow", inside) }) + parts.last()
+    }
     body
   },
 )
