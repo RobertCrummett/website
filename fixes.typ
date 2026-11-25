@@ -23,6 +23,19 @@
   css: prefix => "@font-face { font-family: \"New Computer Modern Math\"; src: url(\"" + prefix + "fonts/NewCMMath-Book.woff\") format(\"woff\"); }\nmath { font-family: \"New Computer Modern Math\", math; }",
 )
 
+// --- math-size --------------------------------------------------------------
+// In the PDFs a math letter stands as tall as the text around it. The math
+// font's x is 0.44 of the font size tall, about as tall as Times on Windows
+// and Mac, but Android's text font, Noto Serif, is 0.54, so there all math
+// looked a fifth too small. Scale every font on the page to the x-height of
+// the text font (font-size-adjust), which leaves the text itself alone;
+// code keeps its own size.
+// Keep while the text font is left to the browser.
+#let math-size = (
+  name: "math-size",
+  css: prefix => "body { font-size-adjust: from-font; }\npre, code { font-size-adjust: none; }",
+)
+
 // --- tight-delimiters -------------------------------------------------------
 // Typst marks every delimiter group `lr` as stretchy, and browsers then grow
 // the bracket to the next size up and pad it, so f(x) looks like f ( x ).
@@ -112,9 +125,10 @@
 // The fixes in use. Comment out or delete a line to pull one out.
 #let fixes = (
   math-font,
+  math-size,
   tight-delimiters,
   centered-dots,
-  accent-air,
+  // accent-air,     only for Cambria Math, so off while math-font is on
   inline-primes,
 )
 
