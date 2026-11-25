@@ -98,20 +98,21 @@
 // Over a longer base Typst's stretched accent stays, save dots.
 // Drop once Chrome places accents from the font's MATH table.
 //
-// Per combining accent: the mark to draw (none: keep it), its lift, and the
-// mark's own accent spot right of its center; in em of the math font.
+// Per combining accent: the mark to draw (none: keep it), its lift, the
+// mark's own accent spot right of its center, and the bottom of the mark's
+// ink above its baseline (for WebKit); in em of the math font.
 #let accent-marks = (
-  "\u{300}": ("\u{60}", 0.088, -0.031),  // grave
-  "\u{301}": ("\u{B4}", 0.088, 0.031),   // acute
-  "\u{302}": (none, 0.059, 0),           // hat
-  "\u{303}": (none, 0.100, 0.016),       // tilde
-  "\u{304}": ("\u{AF}", 0.153, 0.001),   // macron, bar
-  "\u{306}": ("\u{2D8}", 0.136, 0.001),  // breve
-  "\u{307}": ("\u{2D9}", 0.115, -0.001), // dot
-  "\u{308}": ("\u{A8}", 0.121, 0.003),   // dot.double
-  "\u{30A}": ("\u{2DA}", 0.093, 0),      // circle
-  "\u{30C}": ("\u{2C7}", 0.121, 0),      // caron
-  "\u{20D7}": (none, 0.065, 0),          // arrow, padded out in the CSS
+  "\u{300}": ("\u{60}", 0.088, -0.031, 0.509),  // grave
+  "\u{301}": ("\u{B4}", 0.088, 0.031, 0.509),   // acute
+  "\u{302}": (none, 0.059, 0, 0.515),           // hat
+  "\u{303}": (none, 0.100, 0.016, 0.556),       // tilde
+  "\u{304}": ("\u{AF}", 0.153, 0.001, 0.589),   // macron, bar
+  "\u{306}": ("\u{2D8}", 0.136, 0.001, 0.518),  // breve
+  "\u{307}": ("\u{2D9}", 0.115, -0.001, 0.551), // dot
+  "\u{308}": ("\u{A8}", 0.121, 0.003, 0.557),   // dot.double
+  "\u{30A}": ("\u{2DA}", 0.093, 0, 0.529),      // circle
+  "\u{30C}": ("\u{2C7}", 0.121, 0, 0.514),      // caron
+  "\u{20D7}": (none, 0.065, 0, 0.521),          // arrow, padded out in the CSS
 )
 // Lengths in ex, which follow the math font's size where math-size scales
 // it; the font's x-height is 0.431 em.
@@ -121,7 +122,7 @@
   rule: body => {
     show math.accent: it => {
       if it.accent not in accent-marks { return it }
-      let (mark, lift, own-spot) = accent-marks.at(it.accent)
+      let (mark, lift, own-spot, ink-bottom) = accent-marks.at(it.accent)
       let letter = if it.base.has("text") and type(it.base.text) == str and it.base.text.clusters().len() == 1 { it.base.text }
       if letter == none and it.accent not in ("\u{307}", "\u{308}") { return it }
       let shift = if letter == none { 0 } else { accent-shift.at(letter, default: 0) - own-spot }
@@ -130,7 +131,7 @@
       let class = ("accent",)
       if it.accent == "\u{20D7}" { class.push("arrow") }
       if not it.at("dotless", default: true) { class.push("dotted") }
-      let attrs = (accent: "true", class: class.join(" "), style: "--lift: " + font-ex(lift) + "; --shift: " + font-ex(shift))
+      let attrs = (accent: "true", class: class.join(" "), style: "--lift: " + font-ex(lift) + "; --shift: " + font-ex(shift) + "; --drop: " + font-ex(ink-bottom - lift - 0.01))
       let base = if it.base.has("children") { html.elem("mrow", it.base) } else { it.base }
       html.elem("mover", attrs: attrs, base + symbol(if mark == none { it.accent } else { mark }))
     }
@@ -138,11 +139,13 @@
   },
   // The arrow's ink runs from 0.472 to 0.056 em left of its empty box, so
   // 0.528 em of padding centers it. Safari's engine, WebKit (on every iPhone
-  // and iPad browser), stacks accents its own way and floats them high even
-  // with Typst's own markup; there the lift and shift only push them higher,
-  // so they are off where `font: -apple-system-body` is understood, which
-  // is WebKit alone. Safari's accents are still to be fixed.
-  css: prefix => "mover.accent > :last-child { padding-bottom: var(--lift); position: relative; left: var(--shift); }\nmover.accent.arrow > :last-child { padding-left: " + font-ex(0.528) + "; }\n@supports (font: -apple-system-body) { mover.accent > :last-child, mover.accent.arrow > :last-child { padding: 0; position: static; } }",
+  // and iPad browser), stacks accents its own way: it sets the mark's
+  // baseline on top of the letter, so the mark floats by its own height
+  // (measured, as in Typst's own markup). There the mark is instead dropped
+  // by that height less the PDF's gap (--drop), and shifted as in Chrome
+  // (the arrow, which WebKit centers 0.027 em short, a little more).
+  // WebKit alone understands `font: -apple-system-body`.
+  css: prefix => "mover.accent > :last-child { padding-bottom: var(--lift); position: relative; left: var(--shift); }\nmover.accent.arrow > :last-child { padding-left: " + font-ex(0.528) + "; }\n@supports (font: -apple-system-body) { mover.accent > :last-child, mover.accent.arrow > :last-child { padding: 0; top: var(--drop); }\nmover.accent.arrow > :last-child { left: calc(var(--shift) + " + font-ex(0.027) + "); } }",
 )
 
 // --- inline-primes ----------------------------------------------------------
@@ -181,7 +184,7 @@
 // So around a one-letter base the scripts are moved by the difference,
 // worked out per letter from the font (script-shift), for a typical script.
 // Measured against the PDF in Chrome. Numbers are New Computer Modern
-// Math's, so this goes with math-font; off in WebKit, as with accents.
+// Math's, so this goes with math-font. WebKit places scripts as Chrome does.
 // Drop once Chrome places scripts from the font's MATH table as Typst does.
 #let scripts = (
   name: "scripts",
@@ -206,7 +209,7 @@
     }
     body
   },
-  css: prefix => "mrow.scripts > :is(msub, msubsup) > :nth-child(2) { margin-left: var(--sub-x); position: relative; top: var(--sub-y); }\nmrow.scripts > msup > :nth-child(2), mrow.scripts > msubsup > :nth-child(3) { margin-left: var(--sup-x); position: relative; top: var(--sup-y); }\n@supports (font: -apple-system-body) { mrow.scripts > * > * { margin-left: 0 !important; position: static !important; } }",
+  css: prefix => "mrow.scripts > :is(msub, msubsup) > :nth-child(2) { margin-left: var(--sub-x); position: relative; top: var(--sub-y); }\nmrow.scripts > msup > :nth-child(2), mrow.scripts > msubsup > :nth-child(3) { margin-left: var(--sup-x); position: relative; top: var(--sup-y); }",
 )
 
 // The fixes in use. Comment out or delete a line to pull one out.
