@@ -1,5 +1,5 @@
 #let meta = (
-  title: "Adjoint • Inverse • Transpose",
+  title: "Adjoint — Inverse — Transpose",
   date: "11-23-26",
   summary: "Clarification of these operations, for my own sanity.",
 )
