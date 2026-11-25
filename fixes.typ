@@ -10,6 +10,10 @@
 //
 // To see the site without some of them, name them in NOFIX:
 //   NOFIX=inline-primes,accents ./build.sh      (NOFIX=all for none)
+//
+// Numbers taken from the math font (accent spots, script offsets) are in
+// fonts/math-font-data.typ, which fonts/math-font-data.py writes.
+#import "fonts/math-font-data.typ": accent-shift, script-shift
 
 // --- math-font --------------------------------------------------------------
 // Browsers need a font made for math (one with an OpenType MATH table) to draw
@@ -109,24 +113,6 @@
   "\u{30C}": ("\u{2C7}", 0.121, 0),      // caron
   "\u{20D7}": (none, 0.065, 0),          // arrow, padded out in the CSS
 )
-// Each italic letter's accent spot right of its center, in em, from the
-// font's MATH TopAccentAttachment table (Typst sets capital Greek upright).
-#let accent-shift = (
-  "a": 0.022, "b": -0.011, "c": 0.101, "d": 0.182, "e": 0.067, "f": 0.219,
-  "g": 0.077, "h": -0.033, "i": 0.074, "j": 0.153, "k": -0.011, "l": 0.055,
-  "m": 0.017, "n": 0.025, "o": 0.072, "p": 0.092, "q": 0.058, "r": 0.021,
-  "s": 0.061, "t": 0.044, "u": 0.019, "v": 0.051, "w": 0.047, "x": 0.043,
-  "y": 0.059, "z": 0.103, "A": 0.175, "B": 0.115, "C": 0.139, "D": 0.088,
-  "E": 0.136, "F": 0.182, "G": 0.093, "H": 0.127, "I": 0.127, "J": 0.209,
-  "K": 0.120, "L": 0.019, "M": 0.140, "N": 0.141, "O": 0.114, "P": 0.156,
-  "Q": 0.100, "R": 0.084, "S": 0.117, "T": 0.106, "U": 0.080, "V": 0.121,
-  "W": 0.080, "X": 0.114, "Y": 0.108, "Z": 0.143, "α": 0.072, "β": 0.154,
-  "γ": 0.130, "δ": 0.113, "ε": 0.051, "ζ": 0.094, "η": 0.100, "θ": 0.075,
-  "ι": 0.007, "κ": 0.043, "λ": -0.053, "μ": 0.048, "ν": 0.050, "ξ": 0.066,
-  "ο": 0.001, "π": 0.043, "ρ": 0.096, "ς": 0.079, "σ": 0.001, "τ": 0.051,
-  "υ": 0.036, "φ": 0.028, "χ": 0.018, "ψ": 0.143, "ω": 0.034, "ϵ": 0.066,
-  "ϑ": 0.116, "ϰ": 0.053, "ϕ": 0.125, "ϱ": 0.102, "ϖ": 0.039,
-)
 // Lengths in ex, which follow the math font's size where math-size scales
 // it; the font's x-height is 0.431 em.
 #let font-ex(v) = str(calc.round(v / 0.431, digits: 3)).replace("\u{2212}", "-") + "ex"
@@ -186,6 +172,43 @@
   },
 )
 
+// --- scripts ----------------------------------------------------------------
+// Chrome places sub- and superscripts by the MathML rule, which pushes them
+// away from a letter's descender or ascender: f_n hangs its n below the f's
+// tail. Typst's PDF, like TeX, ignores that for a one-letter base, and also
+// sets a superscript past the letter's italic correction (Chrome lets the 2
+// of P^2 run into the P) and tucks scripts in by the font's math kerning.
+// So around a one-letter base the scripts are moved by the difference,
+// worked out per letter from the font (script-shift), for a typical script.
+// Measured against the PDF in Chrome. Numbers are New Computer Modern
+// Math's, so this goes with math-font; off in WebKit, as with accents.
+// Drop once Chrome places scripts from the font's MATH table as Typst does.
+#let scripts = (
+  name: "scripts",
+  rule: body => {
+    show math.attach: it => {
+      let letter = if it.base.has("text") and type(it.base.text) == str and it.base.text.clusters().len() == 1 { it.base.text }
+      if letter == none or letter not in script-shift { return it }
+      let at = key => it.at(key, default: none)
+      let sup = if at("tr") != none { at("tr") } else { at("t") }
+      let sub = if at("br") != none { at("br") } else { at("b") }
+      // Prescripts, or both kinds of each, are left to Typst; so are primes
+      // (inline-primes).
+      if at("tl") != none or at("bl") != none or (at("t") != none and at("tr") != none) or (at("b") != none and at("br") != none) { return it }
+      if sup == none and sub == none or is-primes(sup) { return it }
+      // The numbers are in em of the letter; the script's own em is 70% of it.
+      let (sub-x, sub-up, sup-x, sup-down) = script-shift.at(letter)
+      let em = v => str(calc.round(v / 0.7, digits: 3)).replace("\u{2212}", "-") + "em"
+      let vars = ()
+      if sub != none { vars += ("--sub-x: " + em(sub-x), "--sub-y: " + em(-sub-up)) }
+      if sup != none { vars += ("--sup-x: " + em(sup-x), "--sup-y: " + em(sup-down)) }
+      html.elem("mrow", attrs: (class: "scripts", style: vars.join("; ")), it)
+    }
+    body
+  },
+  css: prefix => "mrow.scripts > :is(msub, msubsup) > :nth-child(2) { margin-left: var(--sub-x); position: relative; top: var(--sub-y); }\nmrow.scripts > msup > :nth-child(2), mrow.scripts > msubsup > :nth-child(3) { margin-left: var(--sup-x); position: relative; top: var(--sup-y); }\n@supports (font: -apple-system-body) { mrow.scripts > * > * { margin-left: 0 !important; position: static !important; } }",
+)
+
 // The fixes in use. Comment out or delete a line to pull one out.
 #let fixes = (
   math-font,
@@ -193,6 +216,7 @@
   tight-delimiters,
   accents,
   inline-primes,
+  scripts,
 )
 
 #let off = sys.inputs.at("nofix", default: "").split(",").map(str.trim).filter(s => s != "")
