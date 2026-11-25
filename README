@@ -37,7 +37,9 @@ with `git push --no-verify`.
                browsers catch up (NOFIX=name ./build.sh to try)
 ./site.typ     ties it together: finds the posts, builds every page
 ./fonts/       New Computer Modern Math (GUST Font License), the
-               math font of Typst's PDFs, from typst-assets 0.15.1
+               math font of Typst's PDFs, from typst-assets 0.15.1,
+               and math-font-data.typ, the numbers fixes.typ takes
+               from it (rewrite with fonts/math-font-data.py)
 
 Netlify runs ./build.sh on every push and publishes ./_site/,
 so generated HTML is never committed. Locally (typst >= 0.15):
