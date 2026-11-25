@@ -25,15 +25,14 @@
 
 // --- math-size --------------------------------------------------------------
 // In the PDFs a math letter stands as tall as the text around it. The math
-// font's x is 0.44 of the font size tall, about as tall as Times on Windows
-// and Mac, but Android's text font, Noto Serif, is 0.54, so there all math
-// looked a fifth too small. Scale every font on the page to the x-height of
-// the text font (font-size-adjust), which leaves the text itself alone;
-// code keeps its own size.
+// font's x-height is 0.431 em, about that of Times on Windows and Mac, but
+// Android's text font, Noto Serif, is 0.536 em, so there all math looked a
+// fifth too small. Size each equation to the x-height of the text around it
+// (1ex, in font-size, is the surrounding text's); nothing else changes.
 // Keep while the text font is left to the browser.
 #let math-size = (
   name: "math-size",
-  css: prefix => "body { font-size-adjust: from-font; }\npre, code { font-size-adjust: none; }",
+  css: prefix => "math { font-size: calc(1ex / 0.431); }",
 )
 
 // --- tight-delimiters -------------------------------------------------------
@@ -152,8 +151,12 @@
     body
   },
   // The arrow's ink runs from 0.472 to 0.056 em left of its empty box, so
-  // 0.528 em of padding centers it.
-  css: prefix => "mover.accent > :last-child { padding-bottom: var(--lift); position: relative; left: var(--shift); }\nmover.accent.arrow > :last-child { padding-left: " + font-ex(0.528) + "; }",
+  // 0.528 em of padding centers it. Safari's engine, WebKit (on every iPhone
+  // and iPad browser), stacks accents its own way and floats them high even
+  // with Typst's own markup; there the lift and shift only push them higher,
+  // so they are off where `font: -apple-system-body` is understood, which
+  // is WebKit alone. Safari's accents are still to be fixed.
+  css: prefix => "mover.accent > :last-child { padding-bottom: var(--lift); position: relative; left: var(--shift); }\nmover.accent.arrow > :last-child { padding-left: " + font-ex(0.528) + "; }\n@supports (font: -apple-system-body) { mover.accent > :last-child, mover.accent.arrow > :last-child { padding: 0; position: static; } }",
 )
 
 // --- inline-primes ----------------------------------------------------------
